@@ -58,12 +58,10 @@ running = False
 while running:
 
 
-    screen.fill(BLACK)
+    curspos = pygame.mouse.get_pos()    # Get cursor position on the screen
 
-    curspos = pygame.mouse.get_pos()
 
-    pygame.display.flip()
-    fps_clock.tick(FPS)
+    screen.fill(BLACK)                  # Fill screen with black
 
-pygame.quit()
-exit()
+    pygame.display.flip()               # Update all display changes and show them
+    fps_clock.tick(FPS)                 # Make program never run at more than "FPS" frames per second
