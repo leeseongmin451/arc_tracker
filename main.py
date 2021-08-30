@@ -88,10 +88,11 @@ class ArcTracker(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-    def update(self, mouse_state) -> None:
+    def update(self, mouse_state, key_state) -> None:
         """
         Updating method needed for all sprite class
         :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
 
@@ -104,6 +105,9 @@ while True:
     pygame.event.get()
     mouse[LCLICK], mouse[MCLICK], mouse[RCLICK], mouse[SCRLUP], mouse[SCRLDN] = pygame.mouse.get_pressed(5)
     mouse[CURPOS] = pygame.mouse.get_pos()        # Get cursor position on the screen
+
+    # Get all kind of events generated from keyboard
+    keys = pygame.key.get_pressed()
 
     # Quit game when clicking mouse wheel (needs to be modified)
     if mouse[MCLICK]:
