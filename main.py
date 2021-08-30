@@ -4,10 +4,18 @@ from pygame.locals import *
 import ctypes
 ctypes.windll.user32.SetProcessDPIAware()
 
-# START GAME AND INITIAL SETTING#
+# Start game and initial setting
 pygame.init()
 
-# DEFINING COLORS
+# Constants to indicate which kind of input
+LCLICK = 1      # Left click (bool)
+MCLICK = 2      # Middle click (bool)
+RCLICK = 3      # Right click (bool)
+SCRLUP = 4      # Scroll up (bool)
+SCRLDN = 5      # Scroll down (bool)
+CURPOS = 6      # Cursor position (tuple (x, y))
+
+# Defining colors
 BLACK = (0, 0, 0)
 WHITE1 = (255, 255, 255)
 WHITE2 = (127, 127, 127)
@@ -45,9 +53,12 @@ screen_width, screen_height = 1920, 1080
 flags = FULLSCREEN | DOUBLEBUF
 screen = pygame.display.set_mode((screen_width, screen_height), flags, 16)
 
-# frame control
+# Frame control
 FPS = 60
 fps_clock = pygame.time.Clock()
+
+# Mouse control event dict
+mouse = {LCLICK: False, MCLICK: False, RCLICK: False, SCRLUP: False, SCRLDN: False, CURPOS: (0, 0)}
 
 
 class ArcTracker(pygame.sprite.Sprite):
@@ -77,28 +88,26 @@ class ArcTracker(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-    def update(self) -> None:
+    def update(self, mouse_state) -> None:
         """
         Updating method needed for all sprite class
+        :param mouse_state: Dictionary of clicking event and position info
         :return: None
         """
 
         pass
 
 
-# MAIN GAME LOOP #
-
+# Main game loop
 while True:
     # Get all kind of events generated from mouse
     pygame.event.get()
-    left_click, middle_click, right_click, scroll_up, scroll_down = pygame.mouse.get_pressed(5)
+    mouse[LCLICK], mouse[MCLICK], mouse[RCLICK], mouse[SCRLUP], mouse[SCRLDN] = pygame.mouse.get_pressed(5)
+    mouse[CURPOS] = pygame.mouse.get_pos()        # Get cursor position on the screen
 
     # Quit game when clicking mouse wheel (needs to be modified)
-    if middle_click:
+    if mouse[MCLICK]:
         break
-
-    curspos = pygame.mouse.get_pos()    # Get cursor position on the screen
-
 
     screen.fill(BLACK)                  # Fill screen with black
 
