@@ -50,6 +50,42 @@ FPS = 60
 fps_clock = pygame.time.Clock()
 
 
+class ArcTracker(pygame.sprite.Sprite):
+    """
+    A sprite controlled by player
+
+    This moves only through "arc track" indicated by user input.
+
+    Arc tracks have rotation axis, rotation angle and direction(either clockwise or counterclockwise).
+
+    Arctracker has 3 states: Idle, Ready, and Moving.
+
+    Idle: Does nothing. When a left-click event occurs, it changes to Ready state.
+
+    Ready: In this state, rotation axis had been set and user can modulate rotation angle and direction
+    by moving mouse cursor around ArcTracker. When left-click event occurs again, it changes to Moving state.
+    If user presses "c" or ESC key, it'll move back to the Idle state and arc track setting process is canceled.
+
+    Moving: ArcTracker actually moves along the arc trail.
+    After moving, it returns back to the Idle state automatically.
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+    def update(self) -> None:
+        """
+        Updating method needed for all sprite class
+        :return: None
+        """
+
+        pass
+
+
 # MAIN GAME LOOP #
 
 while True:
