@@ -49,14 +49,17 @@ screen = pygame.display.set_mode((screen_width, screen_height), flags, 16)
 FPS = 60
 fps_clock = pygame.time.Clock()
 
-# Indicates whether continue game loop or break
-running = False
-
 
 # MAIN GAME LOOP #
 
-while running:
+while True:
+    # Get all kind of events generated from mouse
+    pygame.event.get()
+    left_click, middle_click, right_click, scroll_up, scroll_down = pygame.mouse.get_pressed(5)
 
+    # Quit game when clicking mouse wheel (needs to be modified)
+    if middle_click:
+        break
 
     curspos = pygame.mouse.get_pos()    # Get cursor position on the screen
 
