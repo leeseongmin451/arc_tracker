@@ -61,6 +61,11 @@ fps_clock = pygame.time.Clock()
 mouse = {LCLICK: False, MCLICK: False, RCLICK: False, SCRLUP: False, SCRLDN: False, CURPOS: (0, 0)}
 
 
+# Loading images
+arc_tracker_img = pygame.image.load("img/character/arc_tracker.png").convert()      # Image of Arc tracker
+arc_tracker_img.set_colorkey(BLACK)                                                 # Remove black region of the image
+
+
 class ArcTracker(pygame.sprite.Sprite):
     """
     A sprite controlled by player
@@ -81,12 +86,24 @@ class ArcTracker(pygame.sprite.Sprite):
     After moving, it returns back to the Idle state automatically.
     """
 
-    def __init__(self):
+    def __init__(self, pos):
         """
         Initializing method
+        :param pos: starting position
         """
 
         pygame.sprite.Sprite.__init__(self)
+
+        # Basic attributes
+        self.state = "idle"             # ["idle", "ready", "moving"]
+        self.x_pos, self.y_pos = pos    # Position on screen
+
+        self.size = (30, 30)                                                    # Size of ArcTracker
+        self.image = pygame.transform.scale(arc_tracker_img, self.size)         # Image of ArcTracker
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))        # A virtual rectangle which encloses ArcTracker
+
+        self.rotation_axis = (0, 0)     # Position of axis ArcTracker rotate around
+        self.rotation_angle = 0         # Rotating angle (in radians)
 
     def update(self, mouse_state, key_state) -> None:
         """
