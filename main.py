@@ -78,12 +78,12 @@ class ArcTracker(pygame.sprite.Sprite):
 
     Idle: Does nothing. When a left-click event occurs, it changes to Ready state.
 
-    Ready: In this state, rotation axis had been set and user can modulate rotation angle and direction
-    by moving mouse cursor around ArcTracker. When left-click event occurs again, it changes to Moving state.
+    Ready: In this state, rotation axis had been set. When user clicks again, it changes to Moving state.
+    It moves clockwise for right-click event, and counterclockwise for left-click event.
     If user presses "c" or ESC key, it'll move back to the Idle state and arc track setting process is canceled.
 
     Moving: ArcTracker actually moves along the arc trail.
-    After moving, it returns back to the Idle state automatically.
+    If a click event occurs, it stops moving and returns back to the Idle state.
     """
 
     def __init__(self, pos):
