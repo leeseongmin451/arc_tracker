@@ -104,16 +104,61 @@ class ArcTracker(pygame.sprite.Sprite):
 
         self.rotation_axis = (0, 0)     # Position of axis ArcTracker rotate around
         self.rotation_angle = 0         # Rotating angle (in radians)
+        self.direction_factor = 1       # 1 for counterclockwise, -1 for clockwise
+
+        # To indicate whether mouse button is pressed
+        self.mouse_pressed = False
 
     def update(self, mouse_state, key_state) -> None:
         """
         Updating method needed for all sprite class
+
+        When the left mouse button is initially pressed, a virtual circular guideline appears in order to check
+        ArkTracker's path to move around. This guideline's center will be the axis of rotation,
+        and it always passes the center of ArcTracker. User can move the axis position until the mouse button is released.
+        It is defined as an independent sprite class(ArcTrackerPath),
+        and exists until moving process of ArcTracker finishes.
+
         :param mouse_state: Dictionary of clicking event and position info
         :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
 
-        pass
+        # At Idle state
+        if self.state == "idle":
+            # Enters to axis setting mode when holding mouse left button
+            if not self.mouse_pressed and mouse_state[LCLICK]:
+                self.mouse_pressed = True
+                """ ArcTrackerPath generating code """
+
+            # Change to Ready state when releasing mouse left button
+            if self.mouse_pressed and not mouse_state[LCLICK]:
+                self.mouse_pressed = False
+                self.state = "ready"
+
+        # At Ready state
+        elif self.state == "ready":
+            # Accepts only one input between left and right click
+            if not self.mouse_pressed and (mouse_state[LCLICK] ^ mouse_state[RCLICK]):
+                self.mouse_pressed = True
+                self.direction_factor = 1 if mouse_state[LCLICK] else -1    # Set rotation direction
+
+            # Change to Moving statewhen releasing mouse button
+            if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
+                self.mouse_pressed = False
+                self.state = "Moving"
+
+        # At Moving state
+        else:
+            """ ArcTracker moving code """
+
+            # Return to Idle state if left mouse button pressed when moving
+            if mouse_state[LCLICK]:
+                self.state = "idle"
+
+        # Update position of ArcTracker
+        self.rect.x = round(self.x_pos)
+        self.rect.y = round(self.y_pos)
 
 
 # Main game loop
