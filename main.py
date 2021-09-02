@@ -85,6 +85,7 @@ class ArcTracker(pygame.sprite.Sprite):
     Moving: ArcTracker actually moves along the arc trail.
     If a click event occurs, it stops moving and returns back to the Idle state.
     """
+    group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
     def __init__(self, pos):
         """
@@ -108,6 +109,10 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # To indicate whether mouse button is pressed
         self.mouse_pressed = False
+
+        # Add this sprite to sprite groups
+        all_sprites.add(self)
+        self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
         """
@@ -165,6 +170,9 @@ class ArcTracker(pygame.sprite.Sprite):
         self.rect.y = round(self.y_pos)
 
 
+all_sprites = pygame.sprite.Group()     # Sprite group for update method
+
+
 # Main game loop
 while True:
     # Get all kind of events generated from mouse
@@ -179,7 +187,10 @@ while True:
     if mouse[MCLICK]:
         break
 
+    all_sprites.update(mouse, keys)     # Call "update" method of every sprite
+
     screen.fill(BLACK)                  # Fill screen with black
+    ArcTracker.group.draw(screen)       # Draw all ArcTrackers
 
     pygame.display.flip()               # Update all display changes and show them
     fps_clock.tick(FPS)                 # Make program never run at more than "FPS" frames per second
