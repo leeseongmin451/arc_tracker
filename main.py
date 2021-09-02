@@ -131,10 +131,14 @@ class ArcTracker(pygame.sprite.Sprite):
                 self.mouse_pressed = True
                 """ ArcTrackerPath generating code """
 
-            # Change to Ready state when releasing mouse left button
-            if self.mouse_pressed and not mouse_state[LCLICK]:
-                self.mouse_pressed = False
-                self.state = "ready"
+            # Set the position of rotation axis to current cursor position until mouse button is released
+            if self.mouse_pressed:
+                self.rotation_axis = mouse_state[CURPOS]
+
+                # Change to Ready state and fix the rotation axis when releasing mouse left button
+                if mouse_state[LCLICK]:
+                    self.mouse_pressed = False
+                    self.state = "ready"
 
         # At Ready state
         elif self.state == "ready":
