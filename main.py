@@ -170,6 +170,34 @@ class ArcTracker(pygame.sprite.Sprite):
         self.rect.y = round(self.y_pos)
 
 
+class ArcTrackerPath(pygame.sprite.Sprite):
+    """
+    A virtual circular guideline where ArcTracker passes through
+
+
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        pass
+
+
+
+
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
 
 
