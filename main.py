@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import math
 
 import ctypes
 ctypes.windll.user32.SetProcessDPIAware()
@@ -64,6 +65,17 @@ mouse = {LCLICK: False, MCLICK: False, RCLICK: False, SCRLUP: False, SCRLDN: Fal
 # Loading images
 arc_tracker_img = pygame.image.load("img/character/arc_tracker.png").convert()      # Image of Arc tracker
 arc_tracker_img.set_colorkey(BLACK)                                                 # Remove black region of the image
+
+
+def distance(pos1, pos2):
+    """
+    Returns distance of two positions with x, y coordinates
+    :param pos1: position 1
+    :param pos2: position 2
+    :return: distance of the two positions
+    """
+
+    return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
 
 
 class ArcTracker(pygame.sprite.Sprite):
@@ -174,15 +186,34 @@ class ArcTrackerPath(pygame.sprite.Sprite):
     """
     A virtual circular guideline where ArcTracker passes through
 
-
+    Appears from first clicked time until complete moving. Invisible at Idle state of ArcTracker.
     """
 
-    def __init__(self):
+    group = pygame.sprite.Group()  # ArcTrackerPath' own sprite group
+
+    def __init__(self, cursor_pos, arc_tracker_pos):
         """
         Initializing method
+
+        :param cursor_pos: Initial center position of circular path
+        :param arc_tracker_pos: ArcTrackerPath will always pass this position
         """
 
         pygame.sprite.Sprite.__init__(self)
+
+        self.x_pos, self.y_pos = cursor_pos                         # Center position of circular path
+        self.arc_tracker_pos = arc_tracker_pos                      # Position of ArcTracker which will follow this path
+        self.radius = distance(cursor_pos, self.arc_tracker_pos)    # Radius of circular path
+
+        self.image = pygame.Surface((2 * self.radius, 2 * self.radius))     # Create a new surface object to draw circle on
+        self.image.set_colorkey(BLACK)                                      # Initially make it fully transparent
+        self.rect = self.image.get_rect(center=cursor_pos)                  # A virtual rectangle which encloses ArcTrackerPath
+        # Draw a circle path on this surface
+        pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
+
+        # Add this sprite to sprite groups
+        all_sprites.add(self)
+        self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
         """
@@ -193,9 +224,15 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         :return: None
         """
 
-        pass
+        self.x_pos, self.y_pos = mouse_state[CURPOS]                        # Update center position of circular path
+        self.radius = distance(mouse_state[CURPOS], self.arc_tracker_pos)   # Update radius of circular path
 
-
+        # Redefine surface using updated position and radius
+        self.image = pygame.Surface((2 * self.radius, 2 * self.radius))     # Create a new surface object to draw circle on
+        self.image.set_colorkey(BLACK)                                      # Initially make it fully transparent
+        self.rect = self.image.get_rect(center=mouse_state[CURPOS])         # A virtual rectangle which encloses ArcTrackerPath
+        # Draw a circle path on this surface
+        pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
 
 
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
