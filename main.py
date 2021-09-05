@@ -119,6 +119,9 @@ class ArcTracker(pygame.sprite.Sprite):
         self.rotation_angle = 0         # Rotating angle (in radians)
         self.direction_factor = 1       # 1 for counterclockwise, -1 for clockwise
 
+        # ArcTrackerPath class instance will be allocated if needed
+        self.path = None
+
         # To indicate whether mouse button is pressed
         self.mouse_pressed = False
 
@@ -146,14 +149,15 @@ class ArcTracker(pygame.sprite.Sprite):
             # Enters to axis setting mode when holding mouse left button
             if not self.mouse_pressed and mouse_state[LCLICK]:
                 self.mouse_pressed = True
-                """ ArcTrackerPath generating code """
+                self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)   # Generate ArcTrackerPath
 
             # Set the position of rotation axis to current cursor position until mouse button is released
             if self.mouse_pressed:
                 self.rotation_axis = mouse_state[CURPOS]
 
                 # Change to Ready state and fix the rotation axis when releasing mouse left button
-                if mouse_state[LCLICK]:
+                if not mouse_state[LCLICK]:
+                    all_sprites.remove(self.path)
                     self.mouse_pressed = False
                     self.state = "ready"
 
@@ -164,22 +168,36 @@ class ArcTracker(pygame.sprite.Sprite):
                 self.mouse_pressed = True
                 self.direction_factor = 1 if mouse_state[LCLICK] else -1    # Set rotation direction
 
-            # Change to Moving statewhen releasing mouse button
+            # Change to Moving state when releasing mouse button
             if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
                 self.mouse_pressed = False
                 self.state = "Moving"
+
+            if key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]:
+                self.path.kill()
+                self.path = None
+                self.state = "idle"
 
         # At Moving state
         else:
             """ ArcTracker moving code """
 
-            # Return to Idle state if left mouse button pressed when moving
-            if mouse_state[LCLICK]:
+            # Delete its path if left mouse button pressed when moving
+            if not self.mouse_pressed and mouse_state[LCLICK]:
+                self.mouse_pressed = True
+                self.path.kill()
+                self.path = None
+
+            # Return to Idle state if left mouse button released
+            if self.mouse_pressed and not mouse_state[LCLICK]:
+                self.mouse_pressed = False
                 self.state = "idle"
 
         # Update position of ArcTracker
         self.rect.x = round(self.x_pos)
         self.rect.y = round(self.y_pos)
+
+        print(self.state)
 
 
 class ArcTrackerPath(pygame.sprite.Sprite):
@@ -236,6 +254,7 @@ class ArcTrackerPath(pygame.sprite.Sprite):
 
 
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
+arc_tracker = ArcTracker((960, 540))
 
 
 # Main game loop
@@ -255,6 +274,7 @@ while True:
     all_sprites.update(mouse, keys)     # Call "update" method of every sprite
 
     screen.fill(BLACK)                  # Fill screen with black
+    ArcTrackerPath.group.draw(screen)   # Draw all ArcTrackerPaths
     ArcTracker.group.draw(screen)       # Draw all ArcTrackers
 
     pygame.display.flip()               # Update all display changes and show them
