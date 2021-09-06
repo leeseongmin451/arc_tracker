@@ -67,7 +67,7 @@ arc_tracker_img = pygame.image.load("img/character/arc_tracker.png").convert()  
 arc_tracker_img.set_colorkey(BLACK)                                                 # Remove black region of the image
 
 
-def distance(pos1, pos2):
+def distance(pos1, pos2) -> float:
     """
     Returns distance of two positions with x, y coordinates
     :param pos1: position 1
@@ -76,6 +76,45 @@ def distance(pos1, pos2):
     """
 
     return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
+
+
+def collide_with_rect(sprite: pygame.sprite.Sprite, rectgroup: pygame.sprite.Group) -> bool:
+    """
+    Detects if circular sprite collides with any of rectangular sprite in group
+
+    :param sprite: circular sprite
+    :param rectgroup: sprite group consists of only rectangular sprites
+    :return: bool
+    """
+
+    # Return False if no sprite in the group
+    if not rectgroup:
+        return False
+
+    # Get sprite's position & size
+    sprite_centerx = sprite.rect.centerx
+    sprite_centery = sprite.rect.centery
+    sprite_radius = sprite.rect.w // 2
+
+    # Repeat for every rect sprite in group
+    def collided(spr):
+        rect = spr.rect
+        if abs(sprite_centerx - rect.centerx) > rect.w // 2 + sprite_radius or \
+                abs(sprite_centery - rect.centery) > rect.h // 2 + sprite_radius:
+            return False
+
+        # Dealing with corner case (circle is nearby rentangle's corner)
+        elif rect.w // 2 < abs(sprite_centerx - rect.centerx) <= rect.w // 2 + sprite_radius:
+            if rect.h // 2 < abs(sprite_centery - rect.centery) <= rect.h // 2 + sprite_radius:
+                return distance(sprite.rect.center, rect.center) <= sprite_radius
+            else:
+                return True
+
+        else:
+            return True
+
+    # Repeat for every rect sprite in group
+    return any(map(collided, rectgroup))
 
 
 class ArcTracker(pygame.sprite.Sprite):
@@ -97,6 +136,7 @@ class ArcTracker(pygame.sprite.Sprite):
     Moving: ArcTracker actually moves along the arc trail.
     If a click event occurs, it stops moving and returns back to the Idle state.
     """
+
     group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
     def __init__(self, pos):
@@ -196,7 +236,13 @@ class ArcTracker(pygame.sprite.Sprite):
             self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
             # If ArcTracker touches any kind of obstacles, it will be taken back to the initial position
-            if pygame.sprite.spritecollide(self, all_obstacles, False):
+            collided = False
+
+            # Check collision with StaticRectangularObstacle
+            if collide_with_rect(self, StaticRectangularObstacle.group):
+                collided = True
+
+            if collided:
                 self.path.kill()
                 self.path = None
                 self.x_pos, self.y_pos = self.initial_pos
@@ -278,6 +324,8 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
     A normal, non-moving rectangular obstacle
     """
 
+    group = pygame.sprite.Group()  # StaticRectangularObstacle' own sprite group
+
     def __init__(self, x, y, w, h):
         """
         Initializing method
@@ -297,6 +345,7 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         all_sprites.add(self)
         all_obstacles.add(self)
+        self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
         """
