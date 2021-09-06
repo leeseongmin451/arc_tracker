@@ -109,6 +109,7 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # Basic attributes
         self.state = "idle"             # ["idle", "ready", "moving"]
+        self.initial_pos = pos          # Memorize stating position
         self.x_pos, self.y_pos = pos    # Position on screen
 
         self.size = (30, 30)                                                    # Size of ArcTracker
@@ -194,16 +195,25 @@ class ArcTracker(pygame.sprite.Sprite):
             self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
             self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
-            # Delete its path if left mouse button pressed when moving
-            if not self.mouse_pressed and mouse_state[LCLICK]:
-                self.mouse_pressed = True
+            # If ArcTracker touches any kind of obstacles, it will be taken back to the initial position
+            if pygame.sprite.spritecollide(self, all_obstacles, False):
                 self.path.kill()
                 self.path = None
-
-            # Return to Idle state if left mouse button released
-            if self.mouse_pressed and not mouse_state[LCLICK]:
-                self.mouse_pressed = False
+                self.x_pos, self.y_pos = self.initial_pos
+                self.rect.center = self.initial_pos
                 self.state = "idle"
+
+            else:
+                # Delete its path if left mouse button pressed when moving
+                if not self.mouse_pressed and mouse_state[LCLICK]:
+                    self.mouse_pressed = True
+                    self.path.kill()
+                    self.path = None
+
+                # Return to Idle state if left mouse button released
+                if self.mouse_pressed and not mouse_state[LCLICK]:
+                    self.mouse_pressed = False
+                    self.state = "idle"
 
         # Update position of ArcTracker
         self.rect.centerx = round(self.x_pos)
@@ -263,8 +273,45 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
 
 
+class StaticRectangularObstacle(pygame.sprite.Sprite):
+    """
+    A normal, non-moving rectangular obstacle
+    """
+
+    def __init__(self, x, y, w, h):
+        """
+        Initializing method
+
+        :param x: x position
+        :param y: y position
+        :param w: width
+        :param h: height
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
+        self.image.fill(WHITE1)                             # Fill in this surface with white
+        self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
+
+        # Add this sprite to sprite groups
+        all_sprites.add(self)
+        all_obstacles.add(self)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
+all_obstacles = pygame.sprite.Group()     # Sprite group for all obstacles
 arc_tracker = ArcTracker((960, 540))
+test_obstacle = StaticRectangularObstacle(100, 100, 100, 100)
 
 
 # Main game loop
@@ -284,6 +331,7 @@ while True:
     all_sprites.update(mouse, keys)     # Call "update" method of every sprite
 
     screen.fill(BLACK)                  # Fill screen with black
+    all_obstacles.draw(screen)          # Draw all obstacle objects
     ArcTrackerPath.group.draw(screen)   # Draw all ArcTrackerPaths
     ArcTracker.group.draw(screen)       # Draw all ArcTrackers
 
