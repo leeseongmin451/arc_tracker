@@ -115,9 +115,13 @@ class ArcTracker(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(arc_tracker_img, self.size)         # Image of ArcTracker
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))        # A virtual rectangle which encloses ArcTracker
 
-        self.rotation_axis = (0, 0)     # Position of axis ArcTracker rotate around
-        self.rotation_angle = 0         # Rotating angle (in radians)
-        self.direction_factor = 1       # 1 for counterclockwise, -1 for clockwise
+        self.rotation_axis = (0, 0)         # Position of axis ArcTracker rotate around
+        self.rotation_radius = 0            # Distance between ArcTracker's position and rotation axis
+        self.rotation_speed = 240           # px/sec (NOT an angular speed)
+        self.rotation_angular_speed = 0     # rad/sec
+        # Relative angular position of ArcTracker with respect to rotation axis measured from horizontal x axis
+        self.relative_angle = 0
+        self.direction_factor = 1           # 1 for counterclockwise, -1 for clockwise
 
         # ArcTrackerPath class instance will be allocated if needed
         self.path = None
@@ -166,21 +170,29 @@ class ArcTracker(pygame.sprite.Sprite):
             # Accepts only one input between left and right click
             if not self.mouse_pressed and (mouse_state[LCLICK] ^ mouse_state[RCLICK]):
                 self.mouse_pressed = True
-                self.direction_factor = 1 if mouse_state[LCLICK] else -1    # Set rotation direction
+
+                # Calculate all variables needed for rotation
+                self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+                self.rotation_angular_speed = self.rotation_speed / self.rotation_radius
+                self.relative_angle = math.atan2(self.y_pos - self.rotation_axis[1], self.x_pos - self.rotation_axis[0])
+                self.direction_factor = -1 if mouse_state[LCLICK] else 1    # Set rotation direction
 
             # Change to Moving state when releasing mouse button
             if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
                 self.mouse_pressed = False
                 self.state = "Moving"
 
-            if key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]:
+            if (key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]) and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
                 self.path.kill()
                 self.path = None
                 self.state = "idle"
 
         # At Moving state
         else:
-            """ ArcTracker moving code """
+            # Move ArcTracker
+            self.relative_angle += self.direction_factor * self.rotation_angular_speed / FPS
+            self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
+            self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
             # Delete its path if left mouse button pressed when moving
             if not self.mouse_pressed and mouse_state[LCLICK]:
@@ -194,10 +206,8 @@ class ArcTracker(pygame.sprite.Sprite):
                 self.state = "idle"
 
         # Update position of ArcTracker
-        self.rect.x = round(self.x_pos)
-        self.rect.y = round(self.y_pos)
-
-        print(self.state)
+        self.rect.centerx = round(self.x_pos)
+        self.rect.centery = round(self.y_pos)
 
 
 class ArcTrackerPath(pygame.sprite.Sprite):
