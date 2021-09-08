@@ -18,6 +18,45 @@ def distance(pos1, pos2):
     return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
 
 
+def collide_with_rect(sprite: pygame.sprite.Sprite, rectgroup: pygame.sprite.Group) -> bool:
+    """
+    Detects if circular sprite collides with any of rectangular sprite in group
+
+    :param sprite: circular sprite
+    :param rectgroup: sprite group consists of only rectangular sprites
+    :return: bool
+    """
+
+    # Return False if no sprite in the group
+    if not rectgroup:
+        return False
+
+    # Get sprite's position & size
+    sprite_centerx = sprite.rect.centerx
+    sprite_centery = sprite.rect.centery
+    sprite_radius = sprite.rect.w // 2
+
+    # Repeat for every rect sprite in group
+    def collided(spr):
+        rect = spr.rect
+        if abs(sprite_centerx - rect.centerx) > rect.w // 2 + sprite_radius or \
+                abs(sprite_centery - rect.centery) > rect.h // 2 + sprite_radius:
+            return False
+
+        # Dealing with corner case (circle is nearby rentangle's corner)
+        elif rect.w // 2 < abs(sprite_centerx - rect.centerx) <= rect.w // 2 + sprite_radius:
+            if rect.h // 2 < abs(sprite_centery - rect.centery) <= rect.h // 2 + sprite_radius:
+                return distance(sprite.rect.center, rect.center) <= sprite_radius
+            else:
+                return True
+
+        else:
+            return True
+
+    # Repeat for every rect sprite in group
+    return any(map(collided, rectgroup))
+
+
 class ArcTracker(pygame.sprite.Sprite):
     """
     A sprite controlled by player
@@ -203,5 +242,44 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
 
 
+class StaticRectangularObstacle(pygame.sprite.Sprite):
+    """
+    A normal, non-moving rectangular obstacle
+    """
+
+    group = pygame.sprite.Group()  # StaticRectangularObstacle' own sprite group
+
+    def __init__(self, x, y, w, h):
+        """
+        Initializing method
+
+        :param x: x position
+        :param y: y position
+        :param w: width
+        :param h: height
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
+        self.image.fill(WHITE1)                             # Fill in this surface with white
+        self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
+
+        # Add this sprite to sprite groups
+        all_sprites.add(self)
+        all_obstacles.add(self)
+        self.group.add(self)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
-arc_tracker = ArcTracker((960, 540))
+all_obstacles = pygame.sprite.Group()   # Sprite group for all obstacles
+arc_tracker = ArcTracker((960, 540))    # Generate ArcTracker instance
