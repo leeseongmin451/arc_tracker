@@ -165,6 +165,30 @@ class LevelSelectButton(Button):
         pass        # Will be added after making LevelSelectScreen class
 
 
+class SettingsButton(Button):
+    """
+    A Button class for transition to SettingsScreen
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 200, 400, 150], "SETTINGS", "verdana", 50, WHITE1)
+
+    def operate(self):
+        """
+        SettingsButton's own operation
+
+        :return: None
+        """
+
+        pass        # Will be added after making SettingsScreen class
+
+
 class Text:
     """
     A text surface class to display all texts appearing in this game
