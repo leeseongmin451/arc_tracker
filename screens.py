@@ -139,3 +139,71 @@ class Button(pygame.sprite.Sprite):
         pygame.draw.rect(surface, self.current_back_color, self.rect)   # Draw background first
         pygame.draw.rect(surface, self.current_color, self.rect, 3)     # Draw boundary of button
         surface.blit(self.text_surface, self.text_surface_rect)         # Draw text in button
+
+
+class Text:
+    """
+    A text surface class to display all texts appearing in this game
+    """
+
+    def __init__(self, text, font, font_size, pos, fixpoint="topleft", color=(255, 255, 255)):
+        self.text = text                                                    # Content to display
+        self.font_size = font_size                                          # Size of this text
+        self.font = pygame.font.SysFont(font, self.font_size)               # Create font
+        self.color = color                                                  # Color of this text
+        self.text_surface = self.font.render(self.text, True, self.color)   # Create text surface
+        self.rect = self.text_surface.get_rect()                            # Surface rect
+
+        # Position attributes
+        self.pos = pos              # Position on screen to display
+        self.fixpoint = fixpoint    # Position to fix the text
+        self.fix_position()
+
+    def fix_position(self):
+        """
+        Determine exact position of text using fixpoint
+        :return: None
+        """
+
+        if self.fixpoint == "topleft":
+            self.rect.topleft = self.pos
+        elif self.fixpoint == "midtop":
+            self.rect.midtop = self.pos
+        elif self.fixpoint == "topright":
+            self.rect.topright = self.pos
+        elif self.fixpoint == "midleft":
+            self.rect.midleft = self.pos
+        elif self.fixpoint == "center":
+            self.rect.center = self.pos
+        elif self.fixpoint == "midright":
+            self.rect.midright = self.pos
+        elif self.fixpoint == "bottomleft":
+            self.rect.bottomleft = self.pos
+        elif self.fixpoint == "midbottom":
+            self.rect.midbottom = self.pos
+        elif self.fixpoint == "bottomright":
+            self.rect.bottomright = self.pos
+
+    def update_text(self, new_text):
+        """
+        Change text
+        :param new_text: new text to replace
+        :return: None
+        """
+
+        # Render the new text and create new text surface and rect
+        self.text = new_text
+        self.text_surface = self.font.render(self.text, True, self.color)
+        self.rect = self.text_surface.get_rect()
+
+        # Fix position again
+        self.fix_position()
+
+    def draw(self, surface):
+        """
+        Draw text on a given surface
+        :param surface: surface to draw on
+        :return: None
+        """
+
+        surface.blit(self.text_surface, self.rect)
