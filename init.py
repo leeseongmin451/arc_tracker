@@ -65,6 +65,9 @@ fps_clock = pygame.time.Clock()
 # Mouse control event dict
 mouse = {LCLICK: False, MCLICK: False, RCLICK: False, SCRLUP: False, SCRLDN: False, CURPOS: (0, 0)}
 
+# Indicates whether continue game
+running = True
+
 
 # Loading images
 arc_tracker_img = pygame.image.load("img/character/arc_tracker.png").convert()      # Image of Arc tracker

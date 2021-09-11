@@ -3,6 +3,7 @@ Defines all scenes(screens) of the game
 """
 
 
+import init
 from sprites_and_functions import *
 
 
@@ -187,6 +188,30 @@ class SettingsButton(Button):
         """
 
         pass        # Will be added after making SettingsScreen class
+
+
+class QuitButton(Button):
+    """
+    A Button class for quitting game
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "QUIT GAME", "verdana", 40, WHITE1)
+
+    def operate(self):
+        """
+        QuitButton's own operation
+
+        :return: None
+        """
+
+        init.running = False        # Stop the game loop and quit the game
 
 
 class Text:

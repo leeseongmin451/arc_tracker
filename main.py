@@ -3,11 +3,12 @@ Actually running game loop
 """
 
 
+import init
 from sprites_and_functions import *
 
 
 # Main game loop
-while True:
+while init.running:
     # Get all kind of events generated from mouse
     pygame.event.get()
     mouse[LCLICK], mouse[MCLICK], mouse[RCLICK], mouse[SCRLUP], mouse[SCRLDN] = pygame.mouse.get_pressed(5)
