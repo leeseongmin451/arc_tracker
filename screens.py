@@ -141,6 +141,30 @@ class Button(pygame.sprite.Sprite):
         surface.blit(self.text_surface, self.text_surface_rect)         # Draw text in button
 
 
+class LevelSelectButton(Button):
+    """
+    A Button class for transition to LevelSelectScreen
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 400, 400, 150], "SELECT LEVEL", "verdana", 50, WHITE1)
+
+    def operate(self):
+        """
+        LevelSelectButton's own operation
+
+        :return: None
+        """
+
+        pass        # Will be added after making LevelSelectScreen class
+
+
 class Text:
     """
     A text surface class to display all texts appearing in this game
