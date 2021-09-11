@@ -280,3 +280,51 @@ class Text:
         """
 
         surface.blit(self.text_surface, self.rect)
+
+
+class MainMenuScreen:
+    """
+    Game-starting screen which appears first
+
+    It has game title text, game icon, level select button, settings button, and quit button.
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        self.title_text = Text("ARC TRACKER", "verdana", 50, (screen_width // 2, screen_height // 5), "midtop")     # Text object
+        self.level_select_button = LevelSelectButton()      # Button for level selection
+        self.settings_button = SettingsButton()             # Button for settings
+        self.quit_button = QuitButton()                     # Button for quitting game
+
+        self.show = True                                    # Show this screen or not
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Update all buttons or sprites in this screen
+
+        :return: None
+        """
+
+        # Update all buttons
+        self.level_select_button.update(mouse_state, key_state)
+        self.settings_button.update(mouse_state, key_state)
+        self.quit_button.update(mouse_state, key_state)
+
+    def draw(self, surface):
+        """
+        Draw all things in this screen
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        # Draw title text
+        self.title_text.draw(surface)
+
+        # Draw all buttons
+        self.level_select_button.draw(surface)
+        self.settings_button.draw(surface)
+        self.quit_button.draw(surface)
