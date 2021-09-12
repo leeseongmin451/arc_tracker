@@ -214,6 +214,35 @@ class QuitButton(Button):
         init.running = False        # Stop the game loop and quit the game
 
 
+class LevelButton(Button):
+    """
+    A Button class for playing a specific level
+
+    Each LevelButton instance has its own level attribute to connect to.
+    """
+
+    def __init__(self, level):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "QUIT GAME", "verdana", 40, WHITE1)
+
+        # Number of level to connect
+        self.levelnum = level
+
+    def operate(self):
+        """
+        LevelButton's own operation
+
+        :return: None
+        """
+
+        pass        # Will be added after making LevelScreen class
+
+
 class Text:
     """
     A text surface class to display all texts appearing in this game
@@ -305,6 +334,8 @@ class MainMenuScreen:
         """
         Update all buttons or sprites in this screen
 
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
 
