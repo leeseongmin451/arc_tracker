@@ -293,7 +293,7 @@ class Text:
     A text surface class to display all texts appearing in this game
     """
 
-    def __init__(self, text, font, font_size, pos, fixpoint="topleft", color=(255, 255, 255)):
+    def __init__(self, text, font, font_size, pos, fixpoint="topleft", color=WHITE1):
         self.text = text                                                    # Content to display
         self.font_size = font_size                                          # Size of this text
         self.font = pygame.font.SysFont(font, self.font_size)               # Create font
@@ -330,6 +330,17 @@ class Text:
             self.rect.midbottom = self.pos
         elif self.fixpoint == "bottomright":
             self.rect.bottomright = self.pos
+
+    def update(self, mouse_state, key_state):
+        """
+        Updating method
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        pass
 
     def update_text(self, new_text):
         """
@@ -397,6 +408,8 @@ class Screen:
         :return: None
         """
 
+        screen.fill(BLACK)
+
         for t in self.manage_list:
             t.draw(surface)
 
@@ -433,6 +446,11 @@ class MainMenuScreen(Screen):
         Screen.__init__(self)
 
         self.title_text = Text("ARC TRACKER", "verdana", 50, (screen_width // 2, screen_height // 5), "midtop")     # Text object
+        self.manage_list.append(self.title_text)            # Append this text to manage_list
+
         self.level_select_button = LevelSelectButton(self)  # Button for level selection
         self.settings_button = SettingsButton(self)         # Button for settings
         self.quit_button = QuitButton(self)                 # Button for quitting game
+
+
+mainmenu_screen = MainMenuScreen()      # Generate MainMenuScreen class instance

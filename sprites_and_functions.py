@@ -282,4 +282,3 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
 
 all_sprites = pygame.sprite.Group()     # Sprite group for update method
 all_obstacles = pygame.sprite.Group()   # Sprite group for all obstacles
-arc_tracker = ArcTracker((960, 540))    # Generate ArcTracker instance
