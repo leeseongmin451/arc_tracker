@@ -158,6 +158,7 @@ class LevelSelectButton(Button):
 
         # Screen class in which this button is included
         self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
 
     def operate(self):
         """
@@ -185,6 +186,7 @@ class SettingsButton(Button):
 
         # Screen class in which this button is included
         self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
 
     def operate(self):
         """
@@ -201,7 +203,7 @@ class QuitButton(Button):
     A Button class for quitting game
     """
 
-    def __init__(self):
+    def __init__(self, on_screen):
         """
         Initializing method
 
@@ -209,6 +211,10 @@ class QuitButton(Button):
         """
 
         Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "QUIT GAME", "verdana", 40, WHITE1)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
 
     def operate(self):
         """
@@ -236,6 +242,7 @@ class MainMenuButton(Button):
 
         # Screen class in which this button is included
         self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
 
     def operate(self):
         """
@@ -269,6 +276,7 @@ class LevelButton(Button):
 
         # Screen class in which this button is included
         self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
 
     def operate(self):
         """
@@ -348,7 +356,70 @@ class Text:
         surface.blit(self.text_surface, self.rect)
 
 
-class MainMenuScreen:
+class Screen:
+    """
+    A screen class to display each scene at desired time
+
+    MainMenuScreen, LevelSelectScreen, SettingsScreen, and each LevelScreen will
+    inherit this class.
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+
+        Screen class has a "manage_list" attribute, which contains all texts and buttons
+        appeared in screen for updating and drawing. Sprites for gameplay
+        (such as ArcTracker, Obstacles, etc...) will not be included,
+        because they already have their own sprite group, update and draw method.
+        """
+
+        self.manage_list = []
+        self.now_display = False        # Whether show this screen now or not
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Update all texts/buttons on this screen
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        for t in self.manage_list:
+            t.update(mouse_state, key_state)
+
+    def draw(self, surface):
+        """
+        Draw all texts/buttons on this screen
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        for t in self.manage_list:
+            t.draw(surface)
+
+    def show(self):
+        """
+        Display this screen
+
+        :return: None
+        """
+
+        self.now_display = True
+
+    def hide(self):
+        """
+        Hide this screen to show other screen
+
+        :return: None
+        """
+
+        self.now_display = False
+
+
+class MainMenuScreen(Screen):
     """
     Game-starting screen which appears first
 
@@ -359,40 +430,9 @@ class MainMenuScreen:
         """
         Initializing method
         """
+        Screen.__init__(self)
 
         self.title_text = Text("ARC TRACKER", "verdana", 50, (screen_width // 2, screen_height // 5), "midtop")     # Text object
-        self.level_select_button = LevelSelectButton()      # Button for level selection
-        self.settings_button = SettingsButton()             # Button for settings
-        self.quit_button = QuitButton()                     # Button for quitting game
-
-        self.show = True                                    # Show this screen or not
-
-    def update(self, mouse_state, key_state) -> None:
-        """
-        Update all buttons or sprites in this screen
-
-        :param mouse_state: Dictionary of clicking event and position info
-        :param key_state: Dictionary of event from pressing keyboard
-        :return: None
-        """
-
-        # Update all buttons
-        self.level_select_button.update(mouse_state, key_state)
-        self.settings_button.update(mouse_state, key_state)
-        self.quit_button.update(mouse_state, key_state)
-
-    def draw(self, surface):
-        """
-        Draw all things in this screen
-
-        :param surface: Surface to draw on
-        :return: None
-        """
-
-        # Draw title text
-        self.title_text.draw(surface)
-
-        # Draw all buttons
-        self.level_select_button.draw(surface)
-        self.settings_button.draw(surface)
-        self.quit_button.draw(surface)
+        self.level_select_button = LevelSelectButton(self)  # Button for level selection
+        self.settings_button = SettingsButton(self)         # Button for settings
+        self.quit_button = QuitButton(self)                 # Button for quitting game
