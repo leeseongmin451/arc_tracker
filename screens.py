@@ -63,7 +63,6 @@ class Button(pygame.sprite.Sprite):
         self.is_clicked = False
 
         # Add self to button group
-        all_sprites.add(self)
         self.group.add(self)
 
     def activate(self):
@@ -196,7 +195,8 @@ class SettingsButton(Button):
         :return: None
         """
 
-        pass        # Will be added after making SettingsScreen class
+        self.on_screen.hide()
+        settings_screen.show()
 
 
 class QuitButton(Button):
@@ -239,7 +239,7 @@ class MainMenuButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "MAIN MENU", "verdana", 40, WHITE1)
+        Button.__init__(self, [screen_width - 400, screen_height - 150, 250, 70], "MAIN MENU", "verdana", 30, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -458,12 +458,14 @@ class MainMenuScreen(Screen):
 
 class LevelSelectScreen(Screen):
     """
+    Screen for level selecting
 
+    Has title, buttons for each level, and main menu button
     """
 
     def __init__(self):
         """
-
+        Initializing method
         """
 
         Screen.__init__(self)
@@ -471,8 +473,31 @@ class LevelSelectScreen(Screen):
         self.title_text = Text("SELECT LEVEL", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
+        """ LevelButton generating code """
+        self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
+
+
+class SettingsScreen(Screen):
+    """
+    Screen for settings
+
+    Has title, texts and buttons for setting, and main menu button
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        Screen.__init__(self)
+
+        self.title_text = Text("SETTINGS", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
+        self.manage_list.append(self.title_text)            # Append this text to manage_list
+
+        """ Texts and buttons for setting """
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
 level_select_screen = LevelSelectScreen()   # Generate LevelSelectScreen class instance
+settings_screen = SettingsScreen()          # Generate SettingsScreen class instance
