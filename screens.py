@@ -154,7 +154,7 @@ class LevelSelectButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 200, screen_height - 400, 400, 150], "SELECT LEVEL", "verdana", 50, WHITE1)
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 350, 400, 100], "SELECT LEVEL", "verdana", 50, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -182,7 +182,7 @@ class SettingsButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 200, screen_height - 200, 400, 150], "SETTINGS", "verdana", 50, WHITE1)
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 200, 400, 100], "SETTINGS", "verdana", 50, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -210,7 +210,7 @@ class QuitButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "QUIT GAME", "verdana", 40, WHITE1)
+        Button.__init__(self, [screen_width - 400, screen_height - 150, 250, 70], "QUIT GAME", "verdana", 30, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -445,7 +445,7 @@ class MainMenuScreen(Screen):
         """
         Screen.__init__(self)
 
-        self.title_text = Text("ARC TRACKER", "verdana", 50, (screen_width // 2, screen_height // 5), "midtop")     # Text object
+        self.title_text = Text("ARC TRACKER", "verdana", 80, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
         self.level_select_button = LevelSelectButton(self)  # Button for level selection
