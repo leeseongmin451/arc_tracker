@@ -167,7 +167,8 @@ class LevelSelectButton(Button):
         :return: None
         """
 
-        pass        # Will be added after making LevelSelectScreen class
+        self.on_screen.hide()
+        level_select_screen.show()
 
 
 class SettingsButton(Button):
@@ -251,7 +252,8 @@ class MainMenuButton(Button):
         :return: None
         """
 
-        pass
+        self.on_screen.hide()
+        mainmenu_screen.show()
 
 
 class LevelButton(Button):
@@ -443,6 +445,7 @@ class MainMenuScreen(Screen):
         """
         Initializing method
         """
+
         Screen.__init__(self)
 
         self.title_text = Text("ARC TRACKER", "verdana", 80, (screen_width // 2, screen_height // 6), "center")     # Text object
@@ -453,4 +456,23 @@ class MainMenuScreen(Screen):
         self.quit_button = QuitButton(self)                 # Button for quitting game
 
 
-mainmenu_screen = MainMenuScreen()      # Generate MainMenuScreen class instance
+class LevelSelectScreen(Screen):
+    """
+
+    """
+
+    def __init__(self):
+        """
+
+        """
+
+        Screen.__init__(self)
+
+        self.title_text = Text("SELECT LEVEL", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
+        self.manage_list.append(self.title_text)            # Append this text to manage_list
+
+        self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
+
+
+mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
+level_select_screen = LevelSelectScreen()   # Generate LevelSelectScreen class instance

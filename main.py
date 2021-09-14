@@ -26,5 +26,9 @@ while init.running:
         mainmenu_screen.update(mouse, keys)
         mainmenu_screen.draw(screen)
 
+    if level_select_screen.now_display:
+        level_select_screen.update(mouse, keys)
+        level_select_screen.draw(screen)
+
     pygame.display.flip()               # Update all display changes and show them
     fps_clock.tick(FPS)                 # Make program never run at more than "FPS" frames per second
