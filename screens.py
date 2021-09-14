@@ -147,7 +147,7 @@ class LevelSelectButton(Button):
     A Button class for transition to LevelSelectScreen
     """
 
-    def __init__(self):
+    def __init__(self, on_screen):
         """
         Initializing method
 
@@ -155,6 +155,9 @@ class LevelSelectButton(Button):
         """
 
         Button.__init__(self, [screen_width // 2 - 200, screen_height - 400, 400, 150], "SELECT LEVEL", "verdana", 50, WHITE1)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
 
     def operate(self):
         """
@@ -171,7 +174,7 @@ class SettingsButton(Button):
     A Button class for transition to SettingsScreen
     """
 
-    def __init__(self):
+    def __init__(self, on_screen):
         """
         Initializing method
 
@@ -179,6 +182,9 @@ class SettingsButton(Button):
         """
 
         Button.__init__(self, [screen_width // 2 - 200, screen_height - 200, 400, 150], "SETTINGS", "verdana", 50, WHITE1)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
 
     def operate(self):
         """
@@ -219,7 +225,7 @@ class MainMenuButton(Button):
     A Button class for returning to main menu screen
     """
 
-    def __init__(self):
+    def __init__(self, on_screen):
         """
         Initializing method
 
@@ -227,6 +233,9 @@ class MainMenuButton(Button):
         """
 
         Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "MAIN MENU", "verdana", 40, WHITE1)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
 
     def operate(self):
         """
@@ -245,7 +254,7 @@ class LevelButton(Button):
     Each LevelButton instance has its own level attribute to connect to.
     """
 
-    def __init__(self, level):
+    def __init__(self, level, on_screen):
         """
         Initializing method
 
@@ -257,6 +266,9 @@ class LevelButton(Button):
 
         # Number of level to connect
         self.levelnum = level
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
 
     def operate(self):
         """
