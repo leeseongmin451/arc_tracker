@@ -1,7 +1,7 @@
 """
 Defines all scenes(screens) of the game
 """
-
+import pygame.sprite
 
 import init
 from sprites_and_functions import *
@@ -263,18 +263,18 @@ class LevelButton(Button):
     Each LevelButton instance has its own level attribute to connect to.
     """
 
-    def __init__(self, level, on_screen):
+    def __init__(self, level, rect, on_screen):
         """
         Initializing method
 
         Fix all properties of Button class
         """
 
-        # This will be modified in further commits
-        Button.__init__(self, [screen_width - 400, screen_height - 150, 300, 100], "QUIT GAME", "verdana", 40, WHITE1)
-
         # Number of level to connect
         self.levelnum = level
+
+        # Set button's position according to levelnum
+        Button.__init__(self, rect, str(self.levelnum), "verdana", 25, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -473,7 +473,25 @@ class LevelSelectScreen(Screen):
         self.title_text = Text("SELECT LEVEL", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
-        """ LevelButton generating code """
+        # Generate 5x10 button array
+        self.all_level_buttons = pygame.sprite.Group()      # Group of all buttons connected to each level
+        # Width and height of the entire button array
+        btn_group_width = 1600
+        btn_group_height = 550
+        # Width and height of each button
+        btn_width = 100
+        btn_height = 80
+        # Distance of two adjacent buttons
+        horizontal_gap = (btn_group_width - btn_width) / 9
+        vertical_gap = (btn_group_height - btn_height) / 4
+        # Position of top-left button
+        first_btn_pos_x = (screen_width - btn_group_width) // 2
+        first_btn_pos_y = 300
+        for i in range(50):
+            self.all_level_buttons.add(LevelButton(i + 1, [first_btn_pos_x + round(horizontal_gap * (i % 10)),
+                                                           first_btn_pos_y + round(vertical_gap * (i // 10)),
+                                                           btn_width, btn_height], self))
+
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
