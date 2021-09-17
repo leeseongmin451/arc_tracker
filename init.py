@@ -72,3 +72,8 @@ running = True
 # Loading images
 arc_tracker_img = pygame.image.load("img/character/arc_tracker.png").convert()      # Image of Arc tracker
 arc_tracker_img.set_colorkey(BLACK)                                                 # Remove black region of the image
+goal_point_img_list = []        # List of frame for animating GoalPoint
+for i in range(60):             # Load and append all frames to the list
+    img_frame = pygame.image.load(f"img/character/goal_point_anim/goal_point_{i}.png").convert()
+    img_frame.set_colorkey(BLACK)
+    goal_point_img_list.append(img_frame)

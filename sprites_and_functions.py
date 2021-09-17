@@ -242,6 +242,41 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
 
 
+class GoalPoint(pygame.sprite.Sprite):
+    """
+    A point where ArcTracker should reach in a single level.
+    """
+
+    def __init__(self, pos):
+        """
+        Initializing method
+
+        :param pos: Position of GoalPoint
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.pos = pos              # Position of GoalPoint
+        self.frame_num = 0          # Current frame number of animation list
+        self.image = goal_point_img_list[self.frame_num]        # Current image of GoalPoint
+        self.rect = self.image.get_rect(canter=self.pos)        # A virtual rectangle which encloses GoalPoint
+
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        Switch image at every frame to display animating effect of GoalPoint
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        self.image = goal_point_img_list[self.frame_num]
+        self.frame_num = (self.frame_num + 1) % 60
+
+
 class StaticRectangularObstacle(pygame.sprite.Sprite):
     """
     A normal, non-moving rectangular obstacle
