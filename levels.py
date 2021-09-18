@@ -102,10 +102,26 @@ class Level:
 
 
 # Generate all levels (keys: level number, values: level class instance)
-level_dict = {1: Level(arctracker_pos_list=[(150, screen_height // 2)],
-                       obstacle_list=[StaticRectangularObstacle(0, 0, screen_width, 20),
-                                      StaticRectangularObstacle(0, 0, 20, screen_height),
-                                      StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                                      StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)],
-                       goal_pos_list=[(screen_width - 150, screen_height // 2)],
-                       minimum_moves=2)}
+level_dict = {
+    1: Level(arctracker_pos_list=[(150, screen_height // 2)],
+             obstacle_list=[
+                 StaticRectangularObstacle(0, 0, screen_width, 20),
+                 StaticRectangularObstacle(0, 0, 20, screen_height),
+                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
+             ],
+             goal_pos_list=[(screen_width - 150, screen_height // 2)],
+             minimum_moves=1),
+
+    2: Level(arctracker_pos_list=[(screen_width - 150, 150)],
+             obstacle_list=[
+                 StaticRectangularObstacle(0, 0, screen_width, 20),
+                 StaticRectangularObstacle(0, 0, 20, screen_height),
+                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
+                 StaticRectangularObstacle(760, 0, 400, 600),
+                 StaticRectangularObstacle(760, screen_height - 200, 400, 200)
+             ],
+             goal_pos_list=[(150, 150)],
+             minimum_moves=1)
+}
