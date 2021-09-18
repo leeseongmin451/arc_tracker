@@ -556,6 +556,24 @@ class GamePlayScreen(Screen):
         self.manage_list.append(self.current_levelnum_text)
         self.manage_list.append(self.current_level)
 
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Overrides update method of Screen class
+
+        User can press "q" key to quit this level and return to LevelSelectScreen.
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        Screen.update(self, mouse_state, key_state)
+
+        if key_state[pygame.K_q]:
+            self.current_level.initialize()
+            self.hide()
+            level_select_screen.show()
+
 
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
 level_select_screen = LevelSelectScreen()   # Generate LevelSelectScreen class instance
