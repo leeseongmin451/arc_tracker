@@ -89,7 +89,7 @@ class ArcTracker(pygame.sprite.Sprite):
 
         self.rotation_axis = (0, 0)         # Position of axis ArcTracker rotate around
         self.rotation_radius = 0            # Distance between ArcTracker's position and rotation axis
-        self.rotation_speed = 240           # px/sec (NOT an angular speed)
+        self.rotation_speed = 360           # px/sec (NOT an angular speed)
         self.rotation_angular_speed = 0     # rad/sec
         # Relative angular position of ArcTracker with respect to rotation axis measured from horizontal x axis
         self.relative_angle = 0
@@ -111,8 +111,9 @@ class ArcTracker(pygame.sprite.Sprite):
         :return: None
         """
 
-        self.path.kill()
-        self.path = None
+        if self.path:
+            self.path.kill()
+            self.path = None
         self.state = "idle"
         self.x_pos, self.y_pos = self.initial_pos
         self.mouse_pressed = False
@@ -181,8 +182,9 @@ class ArcTracker(pygame.sprite.Sprite):
             self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
             self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
-            # Delete its path if left mouse button pressed when moving
+            # Stop AcrTrakcer and delete its path if left mouse button pressed when moving
             if not self.mouse_pressed and mouse_state[LCLICK]:
+                self.rotation_angular_speed = 0
                 self.mouse_pressed = True
                 self.path.kill()
                 self.path = None

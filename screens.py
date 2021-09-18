@@ -491,9 +491,9 @@ class LevelSelectScreen(Screen):
         # Position of top-left button
         first_btn_pos_x = (screen_width - btn_group_width) // 2
         first_btn_pos_y = 300
-        for i in range(50):
-            self.all_level_buttons.add(LevelButton(i + 1, [first_btn_pos_x + round(horizontal_gap * (i % 10)),
-                                                           first_btn_pos_y + round(vertical_gap * (i // 10)),
+        for n in range(50):
+            self.all_level_buttons.add(LevelButton(n + 1, [first_btn_pos_x + round(horizontal_gap * (n % 10)),
+                                                           first_btn_pos_y + round(vertical_gap * (n // 10)),
                                                            btn_width, btn_height], self))
 
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen

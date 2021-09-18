@@ -75,6 +75,13 @@ class Level:
         self.obstacle_group.update(mouse_state, key_state)
         self.goal_group.update(mouse_state, key_state)
 
+        # Detect collision between src tracker and obstacles
+        for a in self.arctracker_group:
+            for o in self.obstacle_group:
+                if o.collided(a):
+                    self.initialize()
+                    break
+
     def draw(self, surface: pygame.Surface):
         """
         Draw all sprites and texts in this level
