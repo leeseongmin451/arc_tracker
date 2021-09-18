@@ -109,7 +109,6 @@ class ArcTracker(pygame.sprite.Sprite):
         self.mouse_pressed = False
 
         # Add this sprite to sprite groups
-        all_sprites.add(self)
         self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
@@ -140,9 +139,12 @@ class ArcTracker(pygame.sprite.Sprite):
 
                 # Change to Ready state and fix the rotation axis when releasing mouse left button
                 if not mouse_state[LCLICK]:
-                    all_sprites.remove(self.path)
                     self.mouse_pressed = False
                     self.state = "ready"
+
+            # Update path of ArcTracker only at Idle state
+            if self.path:
+                self.path.update(mouse_state, key_state)
 
         # At Ready state
         elif self.state == "ready":
@@ -219,7 +221,6 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
 
         # Add this sprite to sprite groups
-        all_sprites.add(self)
         self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
@@ -259,7 +260,7 @@ class GoalPoint(pygame.sprite.Sprite):
         self.pos = pos              # Position of GoalPoint
         self.frame_num = 0          # Current frame number of animation list
         self.image = goal_point_img_list[self.frame_num]        # Current image of GoalPoint
-        self.rect = self.image.get_rect(canter=self.pos)        # A virtual rectangle which encloses GoalPoint
+        self.rect = self.image.get_rect(center=self.pos)        # A virtual rectangle which encloses GoalPoint
 
 
     def update(self, mouse_state, key_state) -> None:
@@ -301,8 +302,6 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
 
         # Add this sprite to sprite groups
-        all_sprites.add(self)
-        all_obstacles.add(self)
         self.group.add(self)
 
     def update(self, mouse_state, key_state) -> None:
@@ -313,7 +312,3 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
-
-
-all_sprites = pygame.sprite.Group()     # Sprite group for update method
-all_obstacles = pygame.sprite.Group()   # Sprite group for all obstacles

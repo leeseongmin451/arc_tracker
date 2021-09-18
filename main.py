@@ -20,8 +20,6 @@ while init.running:
     # Get all kind of events generated from keyboard
     keys = pygame.key.get_pressed()
 
-    all_sprites.update(mouse, keys)     # Call "update" method of every sprite
-
     if mainmenu_screen.now_display:
         mainmenu_screen.update(mouse, keys)
         mainmenu_screen.draw(screen)
