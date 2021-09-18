@@ -46,6 +46,21 @@ class Level:
         self.play_framecount = 0                # Level playtime counted in frames
         self.level_playtime = 0                 # Level playtime counted in seconds
 
+    def initialize(self):
+        """
+        Initialize all arc trackers and all obstacles in this level
+
+        :return: None
+        """
+
+        # Initialize all arc trackers
+        for a in self.arctracker_group:
+            a.initialize()
+
+        # Initialize all obstacles
+        for o in self.obstacle_group:
+            o.initialize()
+
     def update(self, mouse_state, key_state) -> None:
         """
         Update all sprites(ArcTracker, obstacles, etc.) in this level

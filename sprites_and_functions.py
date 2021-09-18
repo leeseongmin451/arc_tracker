@@ -80,6 +80,7 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # Basic attributes
         self.state = "idle"             # ["idle", "ready", "moving"]
+        self.initial_pos = pos          # Initial position
         self.x_pos, self.y_pos = pos    # Position on screen
 
         self.size = (30, 30)                                                    # Size of ArcTracker
@@ -102,6 +103,19 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # Add this sprite to sprite groups
         self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+        self.path.kill()
+        self.path = None
+        self.state = "idle"
+        self.x_pos, self.y_pos = self.initial_pos
+        self.mouse_pressed = False
 
     def update(self, mouse_state, key_state) -> None:
         """
@@ -295,6 +309,13 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
 
         # Add this sprite to sprite groups
         self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
 
     def update(self, mouse_state, key_state) -> None:
         """
