@@ -1,7 +1,7 @@
 """
 Define all sprites and functions needed
 """
-
+import pygame.sprite
 
 from init import *
 import math
@@ -18,43 +18,35 @@ def distance(pos1, pos2):
     return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
 
 
-def collide_with_rect(sprite: pygame.sprite.Sprite, rectgroup: pygame.sprite.Group) -> bool:
+def collide_with_rect(circular_sprite: pygame.sprite.Sprite, rectangular_sprite: pygame.sprite.Sprite) -> bool:
     """
-    Detects if circular sprite collides with any of rectangular sprite in group
+    Detects if circular sprite collides with other rectangular sprite
 
-    :param sprite: circular sprite
-    :param rectgroup: sprite group consists of only rectangular sprites
+    :param circular_sprite: circular sprite
+    :param rectangular_sprite: rectangular sprite
     :return: bool
     """
 
-    # Return False if no sprite in the group
-    if not rectgroup:
+    # Get sprite's position & size
+    sprite_centerx = circular_sprite.rect.centerx
+    sprite_centery = circular_sprite.rect.centery
+    sprite_radius = circular_sprite.rect.w // 2
+
+    # Detect collision
+    rect = rectangular_sprite.rect
+    if abs(sprite_centerx - rect.centerx) > rect.w // 2 + sprite_radius or \
+            abs(sprite_centery - rect.centery) > rect.h // 2 + sprite_radius:
         return False
 
-    # Get sprite's position & size
-    sprite_centerx = sprite.rect.centerx
-    sprite_centery = sprite.rect.centery
-    sprite_radius = sprite.rect.w // 2
-
-    # Repeat for every rect sprite in group
-    def collided(spr):
-        rect = spr.rect
-        if abs(sprite_centerx - rect.centerx) > rect.w // 2 + sprite_radius or \
-                abs(sprite_centery - rect.centery) > rect.h // 2 + sprite_radius:
-            return False
-
-        # Dealing with corner case (circle is nearby rentangle's corner)
-        elif rect.w // 2 < abs(sprite_centerx - rect.centerx) <= rect.w // 2 + sprite_radius:
-            if rect.h // 2 < abs(sprite_centery - rect.centery) <= rect.h // 2 + sprite_radius:
-                return distance(sprite.rect.center, rect.center) <= sprite_radius
-            else:
-                return True
-
+    # Dealing with corner case (circle is nearby rentangle's corner)
+    elif rect.w // 2 < abs(sprite_centerx - rect.centerx) <= rect.w // 2 + sprite_radius:
+        if rect.h // 2 < abs(sprite_centery - rect.centery) <= rect.h // 2 + sprite_radius:
+            return distance(circular_sprite.rect.center, rect.center) <= sprite_radius
         else:
             return True
 
-    # Repeat for every rect sprite in group
-    return any(map(collided, rectgroup))
+    else:
+        return True
 
 
 class ArcTracker(pygame.sprite.Sprite):
@@ -312,3 +304,13 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
+
+    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
+        """
+        Check collision with given sprite
+
+        :param sprite: Sprite to check collision
+        :return: bool
+        """
+
+        return collide_with_rect(sprite, self)
