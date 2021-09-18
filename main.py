@@ -34,5 +34,9 @@ while init.running:
         settings_screen.update(mouse, keys)
         settings_screen.draw(screen)
 
+    elif gameplay_screen.now_display:
+        gameplay_screen.update(mouse, keys)
+        gameplay_screen.draw(screen)
+
     pygame.display.flip()               # Update all display changes and show them
     fps_clock.tick(FPS)                 # Make program never run at more than "FPS" frames per second

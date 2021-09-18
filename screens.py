@@ -5,6 +5,7 @@ import pygame.sprite
 
 import init
 from sprites_and_functions import *
+from levels import level_dict
 
 
 class Button(pygame.sprite.Sprite):
@@ -287,7 +288,10 @@ class LevelButton(Button):
         :return: None
         """
 
-        pass        # Will be added after making LevelScreen class
+        if self.levelnum <= len(level_dict):
+            self.on_screen.hide()
+            gameplay_screen.intialize_level(self.levelnum)
+            gameplay_screen.show()
 
 
 class Text:
@@ -516,6 +520,44 @@ class SettingsScreen(Screen):
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
+class GamePlayScreen(Screen):
+    """
+    Screen for gameplay
+
+    Display ArcTracker, obstacles, and goal point in a specified level
+    When user clicks a level button, then GamePlayScreen initializes its sprite components to
+    the corresponding number of level of that button.
+
+    It has a large, transparent number string at the center of the screen, displaying current level number.
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        Screen.__init__(self)
+
+        self.current_levelnum_text = None
+        self.current_level = None
+
+    def intialize_level(self, levelnum):
+        """
+        Change and Initialize level to input levelnum parameter.
+
+        :param levelnum: Number of level to initialize
+        :return: None
+        """
+
+        self.manage_list.clear()
+
+        self.current_levelnum_text = Text(str(levelnum), "verdana", 400, (screen_width // 2, screen_height // 2), "center", WHITE3)
+        self.current_level = level_dict[levelnum]
+        self.manage_list.append(self.current_levelnum_text)
+        self.manage_list.append(self.current_level)
+
+
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
 level_select_screen = LevelSelectScreen()   # Generate LevelSelectScreen class instance
 settings_screen = SettingsScreen()          # Generate SettingsScreen class instance
+gameplay_screen = GamePlayScreen()          # Generate GamePlayScreen class instance
