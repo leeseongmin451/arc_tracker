@@ -337,3 +337,56 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         """
 
         return collide_with_rect(sprite, self)
+
+
+class StaticCircularObstacle(pygame.sprite.Sprite):
+    """
+    A normal, non-moving circular obstacle
+    """
+
+    group = pygame.sprite.Group()  # StaticCircularObstacle' own sprite group
+
+    def __init__(self, x, y, r):
+        """
+        Initializing method
+
+        :param x: x position
+        :param y: y position
+        :param r: radius
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((2 * r, 2 * r))         # Create a new rectangular surface object
+        pygame.draw.circle(self.image, WHITE1, (r, r), r)   # Draw a circle in this surface
+        self.rect = self.image.get_rect(center=(x, y))      # A virtual rectangle which encloses StaticCircularObstacle
+        self.radius = r                                     # Used for collision detection
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
+        """
+        Check collision with given sprite
+
+        :param sprite: Sprite to check collision
+        :return: bool
+        """
+
+        return distance(self.rect.center, sprite.rect.center) < self.radius + sprite.rect.w // 2
