@@ -123,5 +123,17 @@ level_dict = {
                  StaticRectangularObstacle(760, screen_height - 200, 400, 200)
              ],
              goal_pos_list=[(150, 150)],
-             minimum_moves=1)
+             minimum_moves=1),
+
+    3: Level(arctracker_pos_list=[(150, 150)],
+             obstacle_list=[
+                 StaticRectangularObstacle(0, 0, screen_width, 20),
+                 StaticRectangularObstacle(0, 0, 20, screen_height),
+                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
+                 StaticCircularObstacle(300, screen_height - 100, 700),
+                 StaticCircularObstacle(screen_width - 300, 100, 700)
+             ],
+             goal_pos_list=[(screen_width - 150, screen_height - 150)],
+             minimum_moves=2)
 }

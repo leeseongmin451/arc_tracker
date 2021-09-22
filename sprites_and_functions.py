@@ -358,6 +358,7 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface((2 * r, 2 * r))         # Create a new rectangular surface object
+        self.image.set_colorkey(BLACK)                      # Initially make it fully transparent
         pygame.draw.circle(self.image, WHITE1, (r, r), r)   # Draw a circle in this surface
         self.rect = self.image.get_rect(center=(x, y))      # A virtual rectangle which encloses StaticCircularObstacle
         self.radius = r                                     # Used for collision detection
