@@ -18,6 +18,33 @@ def distance(pos1, pos2):
     return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
 
 
+def collide_with_line_segment(circular_sprite: pygame.sprite.Sprite, pos1, pos2) -> bool:
+    """
+    Detects if circular sprite collides with a line segment given by two positions
+
+    :param circular_sprite: circular sprite
+    :param pos1: one position of line segment
+    :param pos2: other position of line segment
+    :return: bool
+    """
+
+    # Get sprite's position & size
+    sprite_centerx = circular_sprite.rect.centerx
+    sprite_centery = circular_sprite.rect.centery
+    sprite_radius = circular_sprite.rect.w // 2
+
+    length = distance(pos1, pos2)                   # Length of line segment
+    x_diff = pos1[0] - pos2[0]                      # Difference of x coordinates of two positions
+    y_diff = pos1[1] - pos2[1]                      # Difference of y coordinates of two positions
+    x_mid = (pos1[0] + pos2[0]) / 2                 # x coordinate of midpoint of the segment
+    y_mid = (pos1[1] + pos2[1]) / 2                 # y coordinate of midpoint of the segment
+
+    close_to_line = abs(y_diff*sprite_centerx - x_diff*sprite_centery + pos1[0]*pos2[1] - pos1[1]*pos2[0]) / length <= sprite_radius
+    within_segment = abs(x_diff*sprite_centerx + y_diff*sprite_centery - x_diff*x_mid - y_diff*y_mid) / length <= length / 2
+
+    return close_to_line and within_segment
+
+
 def collide_with_rect(circular_sprite: pygame.sprite.Sprite, rectangular_sprite: pygame.sprite.Sprite) -> bool:
     """
     Detects if circular sprite collides with other rectangular sprite
@@ -391,3 +418,80 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         """
 
         return distance(self.rect.center, sprite.rect.center) < self.radius + sprite.rect.w // 2
+
+
+class StaticPolygonObstacle(pygame.sprite.Sprite):
+    """
+    A normal, non-moving, and any kind of polygon-shaped obstacle
+    """
+
+    group = pygame.sprite.Group()  # StaticPolygonObstacle's own sprite group
+
+    def __init__(self, *vertices):
+        """
+        Initializing method
+
+        :param vertices: sequence of 3 or more coordinates
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        # Get all given vertices
+        self.vertices_list = []
+        for v in vertices:
+            self.vertices_list.append(v)
+
+        # Get maximum and minimum value of each coordinate
+        # (for calculating size and position of virtual rectangle)
+        max_x = max([p[0] for p in self.vertices_list])
+        min_x = min([p[0] for p in self.vertices_list])
+        max_y = max([p[1] for p in self.vertices_list])
+        min_y = min([p[1] for p in self.vertices_list])
+
+        w, h = max_x - min_x, max_y - min_y
+        self.image = pygame.Surface((w, h))                         # Create a new rectangular surface object
+        self.image.set_colorkey(BLACK)                              # Initially make it fully transparent
+
+        # Draw polygon in this surface with given vertices
+        relative_vertices_list = [[p[0] - min_x, p[1] - min_y] for p in self.vertices_list]
+        pygame.draw.polygon(self.image, WHITE1, relative_vertices_list)
+
+        self.rect = self.image.get_rect(topleft=(min_x, min_y))     # A virtual rectangle which encloses StaticRectangularObstacle
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
+        """
+        Check collision with given circular sprite
+
+        :param sprite: Sprite to check collision
+        :return: bool
+        """
+
+        sprite_radius = sprite.rect.w // 2
+
+        # Check collision with all vertices of this obstacle
+        collided_with_vertices = any([distance(v, sprite.rect.center) <= sprite_radius for v in self.vertices_list])
+
+        # Check collision with all edges of this obstacle
+        collided_with_edges = any([collide_with_line_segment(sprite, p1, p2)
+                                   for p1, p2 in zip(self.vertices_list, self.vertices_list[1:] + [self.vertices_list[0]])])
+
+        return collided_with_vertices or collided_with_edges
