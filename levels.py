@@ -173,7 +173,7 @@ level_dict = {
                  StaticRectangularObstacle(0, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                 StaticPolygonObstacle((300, 300), (500, 200), (400, 800))
+                 StaticRightTriangularObstacle(300, 300, 400, 500, "topleft")
              ],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              minimum_moves=2)

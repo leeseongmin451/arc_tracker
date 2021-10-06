@@ -456,7 +456,85 @@ class StaticPolygonObstacle(pygame.sprite.Sprite):
         relative_vertices_list = [[p[0] - min_x, p[1] - min_y] for p in self.vertices_list]
         pygame.draw.polygon(self.image, WHITE1, relative_vertices_list)
 
-        self.rect = self.image.get_rect(topleft=(min_x, min_y))     # A virtual rectangle which encloses StaticRectangularObstacle
+        self.rect = self.image.get_rect(topleft=(min_x, min_y))     # A virtual rectangle which encloses StaticPolygonObstacle
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
+        """
+        Check collision with given circular sprite
+
+        :param sprite: Sprite to check collision
+        :return: bool
+        """
+
+        sprite_radius = sprite.rect.w // 2
+
+        # Check collision with all vertices of this obstacle
+        collided_with_vertices = any([distance(v, sprite.rect.center) <= sprite_radius for v in self.vertices_list])
+
+        # Check collision with all edges of this obstacle
+        collided_with_edges = any([collide_with_line_segment(sprite, p1, p2)
+                                   for p1, p2 in zip(self.vertices_list, self.vertices_list[1:] + [self.vertices_list[0]])])
+
+        return collided_with_vertices or collided_with_edges
+
+
+class StaticRightTriangularObstacle(pygame.sprite.Sprite):
+    """
+    A normal, non-moving, right-triangular obstacle
+    """
+
+    group = pygame.sprite.Group()  # StaticRightTriangularObstacle's own sprite group
+
+    def __init__(self, x, y, w, h, del_angle_pos="topleft"):
+        """
+        Initializing method
+
+        :param x: x position
+        :param y: y position
+        :param w: width
+        :param h: height
+        :param del_angle_pos: opposite position of right angle, which is not included in right triangle
+                              (can be "topleft", "topright", "bottomleft", "bottomright")
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        # Select 3 vertices of right triangle
+        vertices_dict = {"topleft": (0, 0), "topright": (w, 0), "bottomleft": (0, h), "bottomright": (w, h)}
+        del vertices_dict[del_angle_pos]
+
+        self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
+        self.image.set_colorkey(BLACK)                      # Initially make it fully transparent
+        # Draw a right triangle in this surface
+        pygame.draw.polygon(self.image, WHITE1, list(vertices_dict.values()))
+        self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRightTriangularObstacle
+
+        # Generate list of vertices to deal with it using the same method as StaticPolygonObstacle
+        self.vertices_dict = {"topleft": self.rect.topleft,
+                              "topright": self.rect.topright,
+                              "bottomleft": self.rect.bottomleft,
+                              "bottomright": self.rect.bottomright}
+        del self.vertices_dict[del_angle_pos]
+        self.vertices_list = list(self.vertices_dict.values())
 
         # Add this sprite to sprite groups
         self.group.add(self)
