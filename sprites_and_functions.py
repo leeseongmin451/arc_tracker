@@ -498,13 +498,38 @@ class StaticRightTriangularObstacle(Obstacle):
         self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
         self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRightTriangularObstacle
 
-        # Generate list of vertices to deal with it using the same method as StaticPolygonObstacle
-        self.vertices_dict = {"topleft": self.rect.topleft,
-                              "topright": self.rect.topright,
-                              "bottomleft": self.rect.bottomleft,
-                              "bottomright": self.rect.bottomright}
-        del self.vertices_dict[del_angle_pos]
-        self.vertices_list = list(self.vertices_dict.values())
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+
+class StaticInnerCurvedObstacle(Obstacle):
+    """
+    A normal, non-moving, obstacle
+
+    It is similar to regular static obstacles, but is cut off in arc shape using transparent circle
+    """
+
+    group = pygame.sprite.Group()  # StaticInnerCurvedObstacle's own sprite group
+
+    def __init__(self, original_obstacle_class, params: tuple, inner_curve_center: (int, int), inner_curve_radius: float):
+        """
+        Initializing method
+
+        :param original_obstacle_class: original obstacle class
+        :param params: parameters needed for creating obstacle class instance
+        :param inner_curve_center: center of transparent circle
+        :param inner_curve_radius: radius of transparent circle
+        """
+
+        # Create original obstacle
+        original_obstacle_class.__init__(self, *params)
+
+        # Cut off this obstacle in arc shape by drawing transparent circle
+        relative_centerx = inner_curve_center[0] - self.rect.x
+        relative_centery = inner_curve_center[1] - self.rect.y
+        pygame.draw.circle(self.image, BLACK, (relative_centerx, relative_centery), inner_curve_radius)
+        self.image.set_colorkey(BLACK)
+        self.mask = self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
 
         # Add this sprite to sprite groups
         self.group.add(self)
