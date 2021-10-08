@@ -112,6 +112,7 @@ class ArcTracker(pygame.sprite.Sprite):
 
         self.size = (30, 30)                                                    # Size of ArcTracker
         self.image = pygame.transform.scale(arc_tracker_img, self.size)         # Image of ArcTracker
+        self.mask = pygame.mask.from_surface(self.image)                        # Create a mask object for collision detection
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))        # A virtual rectangle which encloses ArcTracker
 
         self.rotation_axis = (0, 0)         # Position of axis ArcTracker rotate around
@@ -334,6 +335,7 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
 
         self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
         self.image.fill(WHITE1)                             # Fill in this surface with white
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
         self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
 
         # Add this sprite to sprite groups
@@ -363,7 +365,7 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         :return: bool
         """
 
-        return collide_with_rect(sprite, self)
+        return bool(pygame.sprite.collide_mask(self, sprite))
 
 
 class StaticCircularObstacle(pygame.sprite.Sprite):
@@ -387,6 +389,7 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         self.image = pygame.Surface((2 * r, 2 * r))         # Create a new rectangular surface object
         self.image.set_colorkey(BLACK)                      # Initially make it fully transparent
         pygame.draw.circle(self.image, WHITE1, (r, r), r)   # Draw a circle in this surface
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
         self.rect = self.image.get_rect(center=(x, y))      # A virtual rectangle which encloses StaticCircularObstacle
         self.radius = r                                     # Used for collision detection
 
@@ -456,6 +459,7 @@ class StaticPolygonObstacle(pygame.sprite.Sprite):
         relative_vertices_list = [[p[0] - min_x, p[1] - min_y] for p in self.vertices_list]
         pygame.draw.polygon(self.image, WHITE1, relative_vertices_list)
 
+        self.mask = pygame.mask.from_surface(self.image)            # Create a mask object for collision detection
         self.rect = self.image.get_rect(topleft=(min_x, min_y))     # A virtual rectangle which encloses StaticPolygonObstacle
 
         # Add this sprite to sprite groups
@@ -485,16 +489,7 @@ class StaticPolygonObstacle(pygame.sprite.Sprite):
         :return: bool
         """
 
-        sprite_radius = sprite.rect.w // 2
-
-        # Check collision with all vertices of this obstacle
-        collided_with_vertices = any([distance(v, sprite.rect.center) <= sprite_radius for v in self.vertices_list])
-
-        # Check collision with all edges of this obstacle
-        collided_with_edges = any([collide_with_line_segment(sprite, p1, p2)
-                                   for p1, p2 in zip(self.vertices_list, self.vertices_list[1:] + [self.vertices_list[0]])])
-
-        return collided_with_vertices or collided_with_edges
+        return bool(pygame.sprite.collide_mask(self, sprite))
 
 
 class StaticRightTriangularObstacle(pygame.sprite.Sprite):
@@ -526,6 +521,7 @@ class StaticRightTriangularObstacle(pygame.sprite.Sprite):
         self.image.set_colorkey(BLACK)                      # Initially make it fully transparent
         # Draw a right triangle in this surface
         pygame.draw.polygon(self.image, WHITE1, list(vertices_dict.values()))
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
         self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRightTriangularObstacle
 
         # Generate list of vertices to deal with it using the same method as StaticPolygonObstacle
@@ -563,13 +559,4 @@ class StaticRightTriangularObstacle(pygame.sprite.Sprite):
         :return: bool
         """
 
-        sprite_radius = sprite.rect.w // 2
-
-        # Check collision with all vertices of this obstacle
-        collided_with_vertices = any([distance(v, sprite.rect.center) <= sprite_radius for v in self.vertices_list])
-
-        # Check collision with all edges of this obstacle
-        collided_with_edges = any([collide_with_line_segment(sprite, p1, p2)
-                                   for p1, p2 in zip(self.vertices_list, self.vertices_list[1:] + [self.vertices_list[0]])])
-
-        return collided_with_vertices or collided_with_edges
+        return bool(pygame.sprite.collide_mask(self, sprite))
