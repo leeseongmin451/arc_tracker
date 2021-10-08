@@ -314,32 +314,17 @@ class GoalPoint(pygame.sprite.Sprite):
         self.frame_num = (self.frame_num + 1) % 60
 
 
-class StaticRectangularObstacle(pygame.sprite.Sprite):
+class Obstacle(pygame.sprite.Sprite):
     """
-    A normal, non-moving rectangular obstacle
+    A normal, non-moving obstacle class
     """
 
-    group = pygame.sprite.Group()  # StaticRectangularObstacle' own sprite group
-
-    def __init__(self, x, y, w, h):
+    def __init__(self):
         """
         Initializing method
-
-        :param x: x position
-        :param y: y position
-        :param w: width
-        :param h: height
         """
 
         pygame.sprite.Sprite.__init__(self)
-
-        self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
-        self.image.fill(WHITE1)                             # Fill in this surface with white
-        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
-        self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
-
-        # Add this sprite to sprite groups
-        self.group.add(self)
 
     def initialize(self):
         """
@@ -368,7 +353,35 @@ class StaticRectangularObstacle(pygame.sprite.Sprite):
         return bool(pygame.sprite.collide_mask(self, sprite))
 
 
-class StaticCircularObstacle(pygame.sprite.Sprite):
+class StaticRectangularObstacle(Obstacle):
+    """
+    A normal, non-moving rectangular obstacle
+    """
+
+    group = pygame.sprite.Group()  # StaticRectangularObstacle' own sprite group
+
+    def __init__(self, x, y, w, h):
+        """
+        Initializing method
+
+        :param x: x position
+        :param y: y position
+        :param w: width
+        :param h: height
+        """
+
+        Obstacle.__init__(self)
+
+        self.image = pygame.Surface((w, h))                 # Create a new rectangular surface object
+        self.image.fill(WHITE1)                             # Fill in this surface with white
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+        self.rect = self.image.get_rect(topleft=(x, y))     # A virtual rectangle which encloses StaticRectangularObstacle
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+
+class StaticCircularObstacle(Obstacle):
     """
     A normal, non-moving circular obstacle
     """
@@ -384,7 +397,7 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         :param r: radius
         """
 
-        pygame.sprite.Sprite.__init__(self)
+        Obstacle.__init__(self)
 
         self.image = pygame.Surface((2 * r, 2 * r))         # Create a new rectangular surface object
         self.image.set_colorkey(BLACK)                      # Initially make it fully transparent
@@ -396,25 +409,12 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def initialize(self):
-        """
-        Initializing method during gameplay
-
-        :return: None
-        """
-
-    def update(self, mouse_state, key_state) -> None:
-        """
-        Updating method needed for all sprite class
-
-        :param mouse_state: Dictionary of clicking event and position info
-        :param key_state: Dictionary of event from pressing keyboard
-        :return: None
-        """
-
     def collided(self, sprite: pygame.sprite.Sprite) -> bool:
         """
         Check collision with given sprite
+
+        Since there is more simple collision detecting algorithm using distsnce and redius,
+        this method does not use mask object.
 
         :param sprite: Sprite to check collision
         :return: bool
@@ -423,7 +423,7 @@ class StaticCircularObstacle(pygame.sprite.Sprite):
         return distance(self.rect.center, sprite.rect.center) < self.radius + sprite.rect.w // 2
 
 
-class StaticPolygonObstacle(pygame.sprite.Sprite):
+class StaticPolygonObstacle(Obstacle):
     """
     A normal, non-moving, and any kind of polygon-shaped obstacle
     """
@@ -437,7 +437,7 @@ class StaticPolygonObstacle(pygame.sprite.Sprite):
         :param vertices: sequence of 3 or more coordinates
         """
 
-        pygame.sprite.Sprite.__init__(self)
+        Obstacle.__init__(self)
 
         # Get all given vertices
         self.vertices_list = []
@@ -465,34 +465,8 @@ class StaticPolygonObstacle(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def initialize(self):
-        """
-        Initializing method during gameplay
 
-        :return: None
-        """
-
-    def update(self, mouse_state, key_state) -> None:
-        """
-        Updating method needed for all sprite class
-
-        :param mouse_state: Dictionary of clicking event and position info
-        :param key_state: Dictionary of event from pressing keyboard
-        :return: None
-        """
-
-    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
-        """
-        Check collision with given circular sprite
-
-        :param sprite: Sprite to check collision
-        :return: bool
-        """
-
-        return bool(pygame.sprite.collide_mask(self, sprite))
-
-
-class StaticRightTriangularObstacle(pygame.sprite.Sprite):
+class StaticRightTriangularObstacle(Obstacle):
     """
     A normal, non-moving, right-triangular obstacle
     """
@@ -511,7 +485,7 @@ class StaticRightTriangularObstacle(pygame.sprite.Sprite):
                               (can be "topleft", "topright", "bottomleft", "bottomright")
         """
 
-        pygame.sprite.Sprite.__init__(self)
+        Obstacle.__init__(self)
 
         # Select 3 vertices of right triangle
         vertices_dict = {"topleft": (0, 0), "topright": (w, 0), "bottomleft": (0, h), "bottomright": (w, h)}
@@ -534,29 +508,3 @@ class StaticRightTriangularObstacle(pygame.sprite.Sprite):
 
         # Add this sprite to sprite groups
         self.group.add(self)
-
-    def initialize(self):
-        """
-        Initializing method during gameplay
-
-        :return: None
-        """
-
-    def update(self, mouse_state, key_state) -> None:
-        """
-        Updating method needed for all sprite class
-
-        :param mouse_state: Dictionary of clicking event and position info
-        :param key_state: Dictionary of event from pressing keyboard
-        :return: None
-        """
-
-    def collided(self, sprite: pygame.sprite.Sprite) -> bool:
-        """
-        Check collision with given circular sprite
-
-        :param sprite: Sprite to check collision
-        :return: bool
-        """
-
-        return bool(pygame.sprite.collide_mask(self, sprite))
