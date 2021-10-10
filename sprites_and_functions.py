@@ -125,6 +125,10 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # ArcTrackerPath class instance will be allocated if needed
         self.path = None
+        self.min_path_radius = 150
+
+        # MinimumRadiusBorderLine class instance will be allocated if needed
+        self.borderline = None
 
         # To indicate whether mouse button is pressed
         self.mouse_pressed = False
@@ -142,6 +146,9 @@ class ArcTracker(pygame.sprite.Sprite):
         if self.path:
             self.path.kill()
             self.path = None
+        if self.borderline:
+            self.borderline.kill()
+            self.borderline = None
         self.state = "idle"
         self.x_pos, self.y_pos = self.initial_pos
         self.mouse_pressed = False
@@ -166,14 +173,18 @@ class ArcTracker(pygame.sprite.Sprite):
             # Enters to axis setting mode when holding mouse left button
             if not self.mouse_pressed and mouse_state[LCLICK]:
                 self.mouse_pressed = True
-                self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)   # Generate ArcTrackerPath
+                self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)                   # Generate ArcTrackerPath
+                self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
 
             # Set the position of rotation axis to current cursor position until mouse button is released
             if self.mouse_pressed:
                 self.rotation_axis = mouse_state[CURPOS]
 
                 # Change to Ready state and fix the rotation axis when releasing mouse left button
+                # And delete MinimumRadiusBorderLine
                 if not mouse_state[LCLICK]:
+                    self.borderline.kill()
+                    self.borderline = None
                     self.mouse_pressed = False
                     self.state = "ready"
 
@@ -277,6 +288,46 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=mouse_state[CURPOS])         # A virtual rectangle which encloses ArcTrackerPath
         # Draw a circle path on this surface
         pygame.draw.circle(self.image, WHITE2, (self.radius, self.radius), self.radius, 2)
+
+
+class MinimumRadiusBorderLine(pygame.sprite.Sprite):
+    """
+    A border line class which encloses around ArcTracker
+
+    It informs that player cannot generate orbit whose radius is smaller than the radius of it.
+    It has red circular shape.
+    It is generated during Idle state of ArcTracker when dragging mouse to set an orbit.
+    """
+
+    group = pygame.sprite.Group()  # MinimumRadiusBorderLine' own sprite group
+
+    def __init__(self, center, radius):
+        """
+        Initializing method
+
+        :param center: center of MinimumRadiusBorderLine
+        :param radius: radius of MinimumRadiusBorderLine
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((2 * radius, 2 * radius))   # Create a new surface object to draw circle on
+        self.image.set_colorkey(BLACK)                          # Initially make it fully transparent
+        self.rect = self.image.get_rect(center=center)          # A virtual rectangle which encloses MinimumRadiusBorderLine
+        # Draw a circle border line on this surface
+        pygame.draw.circle(self.image, RED1, (radius, radius), radius, 2)
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
 
 
 class GoalPoint(pygame.sprite.Sprite):

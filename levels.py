@@ -95,6 +95,11 @@ class Level:
             if a.path:
                 surface.blit(a.path.image, a.path.rect)
 
+        # Draw all borderline of ArcTrackers
+        for a in self.arctracker_group:
+            if a.borderline:
+                surface.blit(a.borderline.image, a.borderline.rect)
+
         # Draw all sprites in this level
         self.obstacle_group.draw(surface)
         self.goal_group.draw(surface)
