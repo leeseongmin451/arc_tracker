@@ -373,6 +373,85 @@ class Text:
         surface.blit(self.text_surface, self.rect)
 
 
+class PopupTextBox(pygame.sprite.Sprite):
+    """
+    A text box which pops up during gameplay
+    """
+
+    def __init__(self, text):
+        """
+        Initializing method
+
+        Size and displaying time of box will be automatically set.
+
+        :param text: text to display
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.font = pygame.font.SysFont("verdana", 20)
+        self.text_surface = self.font.render(text, True, WHITE1)
+        self.text_rect = self.text_surface.get_rect()
+
+        self.box_w = self.text_rect.w + 100
+        self.box_h = self.text_rect.h + 30
+        self.image = pygame.Surface((self.box_w, self.box_h))
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect(center=(screen_width // 2, screen_height + 100))
+        pygame.draw.rect(self.image, BLACK, [0, 0, self.box_w, self.box_h], 0, 10)
+        pygame.draw.rect(self.image, WHITE2, [0, 0, self.box_w, self.box_h], 4, 10)
+
+        self.text_rect.centerx = self.box_w // 2
+        self.text_rect.centery = self.box_h // 2
+        self.image.blit(self.text_surface, self.text_rect)
+
+        self.display_time = self.text_rect.w * 0.01
+        self.display_frame_cnt = round(self.display_time * FPS)
+        self.current_frame_cnt = 0
+
+        self.popup_speed = 300
+        self.popup_acc = 20
+
+        self.moving_up = True
+        self.moving_down = False
+
+    def update(self, mouse_state, key_state):
+        """
+        Updating method
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        if self.moving_up:
+            self.popup_speed -= self.popup_acc / FPS
+            self.rect.y -= self.popup_speed / FPS
+            if self.popup_speed <= 0:
+                self.moving_up = False
+
+        elif self.moving_down:
+            self.popup_speed -= self.popup_acc / FPS
+            self.rect.y -= self.popup_speed / FPS
+            if self.rect.y > screen_height + 200:
+                self.kill()
+
+        else:
+            self.current_frame_cnt += 1
+            if self.current_frame_cnt >= self.display_frame_cnt:
+                self.moving_down = True
+
+    def draw(self, surface):
+        """
+        Draw box and text
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        surface.blit(self.image, self.rect)
+
+
 class Screen:
     """
     A screen class to display each scene at desired time
