@@ -180,13 +180,25 @@ class ArcTracker(pygame.sprite.Sprite):
             if self.mouse_pressed:
                 self.rotation_axis = mouse_state[CURPOS]
 
-                # Change to Ready state and fix the rotation axis when releasing mouse left button
+                # When releasing mouse left button
                 # And delete MinimumRadiusBorderLine
                 if not mouse_state[LCLICK]:
                     self.borderline.kill()
                     self.borderline = None
                     self.mouse_pressed = False
-                    self.state = "ready"
+
+                    # Calculate rotation radius
+                    self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+
+                    # Change to Ready state and fix the rotation axis if radius of orbit is valid
+                    if self.rotation_radius >= self.min_path_radius:
+                        self.state = "ready"
+                    # Stay in Idle state and delete orbit if radius is invalid
+                    else:
+                        self.path.kill()
+                        self.path = None
+                        self.state = "idle"
+
 
             # Update path of ArcTracker only at Idle state
             if self.path:
