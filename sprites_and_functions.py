@@ -133,6 +133,9 @@ class ArcTracker(pygame.sprite.Sprite):
         # To indicate whether mouse button is pressed
         self.mouse_pressed = False
 
+        # A reference to determine raise popup
+        self.raise_popup = False
+
         # Add this sprite to sprite groups
         self.group.add(self)
 
@@ -195,6 +198,7 @@ class ArcTracker(pygame.sprite.Sprite):
                         self.state = "ready"
                     # Stay in Idle state and delete orbit if radius is invalid
                     else:
+                        self.raise_popup = True
                         self.path.kill()
                         self.path = None
                         self.state = "idle"

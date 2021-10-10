@@ -90,6 +90,9 @@ class Level:
         :return: None
         """
 
+        # Draw all obstacles in this level
+        self.obstacle_group.draw(surface)
+
         # Draw all path of ArcTrackers
         for a in self.arctracker_group:
             if a.path:
@@ -100,8 +103,7 @@ class Level:
             if a.borderline:
                 surface.blit(a.borderline.image, a.borderline.rect)
 
-        # Draw all sprites in this level
-        self.obstacle_group.draw(surface)
+        # Draw all ArcTrackers and GoalPoints in this level
         self.goal_group.draw(surface)
         self.arctracker_group.draw(surface)
 

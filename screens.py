@@ -378,6 +378,8 @@ class PopupTextBox(pygame.sprite.Sprite):
     A text box which pops up during gameplay
     """
 
+    group = pygame.sprite.Group()  # PopupTextBox' own sprite group
+
     def __init__(self, text):
         """
         Initializing method
@@ -398,22 +400,25 @@ class PopupTextBox(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.box_w, self.box_h))
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center=(screen_width // 2, screen_height + 100))
-        pygame.draw.rect(self.image, BLACK, [0, 0, self.box_w, self.box_h], 0, 10)
+        pygame.draw.rect(self.image, WHITE3, [0, 0, self.box_w, self.box_h], 0, 10)
         pygame.draw.rect(self.image, WHITE2, [0, 0, self.box_w, self.box_h], 4, 10)
 
         self.text_rect.centerx = self.box_w // 2
         self.text_rect.centery = self.box_h // 2
         self.image.blit(self.text_surface, self.text_rect)
 
-        self.display_time = self.text_rect.w * 0.01
+        self.display_time = self.text_rect.w * 0.005
         self.display_frame_cnt = round(self.display_time * FPS)
         self.current_frame_cnt = 0
 
-        self.popup_speed = 300
-        self.popup_acc = 20
+        self.popup_speed = 800
+        self.popup_acc = 1500
 
         self.moving_up = True
         self.moving_down = False
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
 
     def update(self, mouse_state, key_state):
         """
@@ -620,6 +625,8 @@ class GamePlayScreen(Screen):
         self.current_levelnum_text = None
         self.current_level = None
 
+        self.popup_text_box = None
+
     def intialize_level(self, levelnum):
         """
         Change and Initialize level to input levelnum parameter.
@@ -652,6 +659,18 @@ class GamePlayScreen(Screen):
             self.current_level.initialize()
             self.hide()
             level_select_screen.show()
+
+        # Generate popup if needed
+        for a in self.current_level.arctracker_group:
+            if a.raise_popup:
+                self.popup_text_box = PopupTextBox("Rotation radius is too small!!")
+                self.manage_list.append(self.popup_text_box)
+                a.raise_popup = False
+
+        # Delete popup object from manage list if it is killed
+        if self.popup_text_box and not self.popup_text_box.alive():
+            del self.manage_list[-1]
+            self.popup_text_box = None
 
 
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
