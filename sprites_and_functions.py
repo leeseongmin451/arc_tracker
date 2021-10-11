@@ -372,7 +372,7 @@ class GoalPoint(pygame.sprite.Sprite):
         self.image = goal_point_img_list[self.frame_num]        # Current image of GoalPoint
         self.rect = self.image.get_rect(center=self.pos)        # A virtual rectangle which encloses GoalPoint
 
-        #
+        # Whether ArcTracker reached to GoalPoint
         self.arctracker_matched = False
 
 

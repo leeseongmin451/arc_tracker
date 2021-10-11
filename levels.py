@@ -75,12 +75,20 @@ class Level:
         self.obstacle_group.update(mouse_state, key_state)
         self.goal_group.update(mouse_state, key_state)
 
-        # Detect collision between src tracker and obstacles
+        # Detect collision between arc tracker and obstacles
         for a in self.arctracker_group:
             for o in self.obstacle_group:
                 if o.collided(a):
                     self.initialize()
                     break
+
+        # Determine whether arc tracker reached to goal point
+        for a in self.arctracker_group:
+            for g in self.goal_group:
+                if distance(a.rect.center, g.rect.center) < 10:
+                    a.level_complete = True
+                    g.arctracker_matched = True
+                    a.rect.center = g.rect.center       # Lock the position of ArcTracker to GoalPoint
 
     def draw(self, surface: pygame.Surface):
         """
