@@ -96,6 +96,7 @@ class Level:
             for g in self.goal_group:
                 if distance(a.rect.center, g.rect.center) < 10 and not g.arctracker_matched:
                     a.level_complete = True
+                    a.reject_path()
                     g.arctracker_matched = True
                     a.rect.center = g.rect.center       # Lock the position of ArcTracker to GoalPoint
 
@@ -195,14 +196,13 @@ level_dict = {
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              minimum_moves=2),
 
-    6: Level(arctracker_pos_list=[(150, screen_height // 2)],
+    6: Level(arctracker_pos_list=[(150, 300), (150, screen_height - 300)],
              obstacle_list=[
                  StaticRectangularObstacle(0, 0, screen_width, 20),
                  StaticRectangularObstacle(0, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                 StaticInnerCurvedObstacle(StaticRectangularObstacle, (300, 300, 500, 400), (300, 300), 100)
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
-             goal_pos_list=[(screen_width - 150, screen_height // 2)],
+             goal_pos_list=[(screen_width - 150, 300), (screen_width - 150, screen_height - 300)],
              minimum_moves=2)
 }

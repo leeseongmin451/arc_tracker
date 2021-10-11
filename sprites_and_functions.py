@@ -208,10 +208,7 @@ class ArcTracker(pygame.sprite.Sprite):
                         # Stay in Idle state and delete orbit if radius is invalid
                         else:
                             self.raise_popup = True
-                            self.path.kill()
-                            self.path = None
-                            self.state = "idle"
-
+                            self.reject_path()
 
                 # Update path of ArcTracker only at Idle state
                 if self.path:
@@ -261,6 +258,18 @@ class ArcTracker(pygame.sprite.Sprite):
             # Update position of ArcTracker
             self.rect.centerx = round(self.x_pos)
             self.rect.centery = round(self.y_pos)
+
+    def reject_path(self) -> None:
+        """
+        Delete path
+
+        :return: None
+        """
+
+        if self.path:
+            self.path.kill()
+            self.path = None
+        self.state = "idle"
 
 
 class ArcTrackerPath(pygame.sprite.Sprite):

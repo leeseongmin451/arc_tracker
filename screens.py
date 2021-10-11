@@ -675,10 +675,12 @@ class GamePlayScreen(Screen):
             level_select_screen.show()
 
         # Generate popup if needed
-        for a in self.current_level.arctracker_group:
-            if a.raise_popup:
-                self.popup_text_box = PopupTextBox("Rotation radius is too small!!")
-                self.manage_list.append(self.popup_text_box)
+        if any([a.raise_popup for a in self.current_level.arctracker_group]):
+            self.popup_text_box = PopupTextBox("Rotation radius is too small!!")
+            self.manage_list.append(self.popup_text_box)
+
+            for a in self.current_level.arctracker_group:
+                a.reject_path()
                 a.raise_popup = False
 
         # Delete popup object from manage list if it is killed
