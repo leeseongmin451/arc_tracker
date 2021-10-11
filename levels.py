@@ -40,8 +40,7 @@ class Level:
 
         # Generate and fill coin group
         self.coin_group = pygame.sprite.Group()
-        for c in coin_pos_list:
-            self.coin_group.add(Coin(c))
+        self.coin_pos_list = coin_pos_list
 
         # Generate and fill goal group
         self.goal_group = pygame.sprite.Group()
@@ -69,9 +68,10 @@ class Level:
         for o in self.obstacle_group:
             o.initialize()
 
-        # Initialize all coins
-        for c in self.coin_group:
-            c.initialize()
+        # Clear and refill coin group
+        self.coin_group.empty()
+        for c in self.coin_pos_list:
+            self.coin_group.add(Coin(c))
 
         # Initialize all goal points
         for g in self.goal_group:
