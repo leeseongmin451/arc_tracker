@@ -46,6 +46,8 @@ class Level:
         self.play_framecount = 0                # Level playtime counted in frames
         self.level_playtime = 0                 # Level playtime counted in seconds
 
+        self.cleared = False                    # Cleared status
+
     def initialize(self):
         """
         Initialize all arc trackers and all obstacles in this level
@@ -64,6 +66,9 @@ class Level:
         # Initialize all goal points
         for g in self.goal_group:
             g.initialize()
+
+        # Initialize cleard status
+        self.cleared = False
 
     def update(self, mouse_state, key_state) -> None:
         """
@@ -89,10 +94,14 @@ class Level:
         # Determine whether arc tracker reached to goal point
         for a in self.arctracker_group:
             for g in self.goal_group:
-                if distance(a.rect.center, g.rect.center) < 10:
+                if distance(a.rect.center, g.rect.center) < 10 and not g.arctracker_matched:
                     a.level_complete = True
                     g.arctracker_matched = True
                     a.rect.center = g.rect.center       # Lock the position of ArcTracker to GoalPoint
+
+        # Complete level if all ArcTrackers reached all GoalPoints
+        if all([a.level_complete for a in self.arctracker_group]):
+            self.cleared = True
 
     def draw(self, surface: pygame.Surface):
         """
