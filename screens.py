@@ -528,6 +528,53 @@ class PopupTextBox(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
+class LevelClearedWindow:
+    """
+    Temporarily appears after clearing a level
+
+    Consists of level-clear message, next-level button, back-to-level-select button.
+    """
+
+    def __init__(self, on_screen):
+        """
+        Initializing method
+        """
+
+        self.image = pygame.Surface((screen_width, screen_height))
+        self.image.set_alpha(128)
+        self.image.fill(WHITE1)
+        self.rect = self.image.get_rect(topleft=(0, 0))
+
+        self.cleared_msg = Text("LEVEL CLEARED!!", "verdana", 50, (screen_width // 2, screen_height // 2 - 100), "center", BLACK)
+        self.next_level_button = NextLevelButton(on_screen)
+        self.level_select_button = BackToLevelSelectButton(on_screen)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Update all texts/buttons on this window
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        self.next_level_button.update(mouse_state, key_state)
+        self.level_select_button.update(mouse_state, key_state)
+
+    def draw(self, surface: pygame.Surface):
+        """
+        Draw all texts/buttons on this window
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        surface.blit(self.image, self.rect)
+        self.cleared_msg.draw(surface)
+        self.next_level_button.draw(surface)
+        self.level_select_button.draw(surface)
+
+
 class Screen:
     """
     A screen class to display each scene at desired time
@@ -699,6 +746,8 @@ class GamePlayScreen(Screen):
 
         self.popup_text_box = None
 
+        self.cleared_window = LevelClearedWindow(self)
+
     def intialize_level(self, levelnum):
         """
         Change and Initialize level to input levelnum parameter.
@@ -712,6 +761,7 @@ class GamePlayScreen(Screen):
         self.current_levelnum = levelnum
         self.current_levelnum_text = Text(str(self.current_levelnum), "verdana", 400, (screen_width // 2, screen_height // 2), "center", WHITE3)
         self.current_level = level_dict[self.current_levelnum]
+        self.current_level.initialize()
         self.manage_list.append(self.current_levelnum_text)
         self.manage_list.append(self.current_level)
 
@@ -746,6 +796,24 @@ class GamePlayScreen(Screen):
         if self.popup_text_box and not self.popup_text_box.alive():
             del self.manage_list[-1]
             self.popup_text_box = None
+
+        # If current level is cleared
+        if self.current_level.cleared:
+            self.cleared_window.update(mouse_state, key_state)
+
+    def draw(self, surface):
+        """
+        Draw all texts/buttons on this screen
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        Screen.draw(self, surface)
+
+        # Draw cleared window if current level is cleared
+        if self.current_level.cleared:
+            self.cleared_window.draw(surface)
 
 
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
