@@ -178,87 +178,89 @@ class ArcTracker(pygame.sprite.Sprite):
         :return: None
         """
 
-        # At Idle state
-        if self.state == "idle":
-            # Enters to axis setting mode when holding mouse left button
-            if not self.mouse_pressed and mouse_state[LCLICK]:
-                self.mouse_pressed = True
-                self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)                   # Generate ArcTrackerPath
-                self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
+        # All operations of ArcTracker are available only before reaching goal point
+        if not self.level_complete:
+            # At Idle state
+            if self.state == "idle":
+                # Enters to axis setting mode when holding mouse left button
+                if not self.mouse_pressed and mouse_state[LCLICK]:
+                    self.mouse_pressed = True
+                    self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)                   # Generate ArcTrackerPath
+                    self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
 
-            # Set the position of rotation axis to current cursor position until mouse button is released
-            if self.mouse_pressed:
-                self.rotation_axis = mouse_state[CURPOS]
+                # Set the position of rotation axis to current cursor position until mouse button is released
+                if self.mouse_pressed:
+                    self.rotation_axis = mouse_state[CURPOS]
 
-                # When releasing mouse left button
-                # And delete MinimumRadiusBorderLine
-                if not mouse_state[LCLICK]:
-                    self.borderline.kill()
-                    self.borderline = None
-                    self.mouse_pressed = False
+                    # When releasing mouse left button
+                    # And delete MinimumRadiusBorderLine
+                    if not mouse_state[LCLICK]:
+                        self.borderline.kill()
+                        self.borderline = None
+                        self.mouse_pressed = False
 
-                    # Calculate rotation radius
+                        # Calculate rotation radius
+                        self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+
+                        # Change to Ready state and fix the rotation axis if radius of orbit is valid
+                        if self.rotation_radius >= self.min_path_radius:
+                            self.state = "ready"
+                        # Stay in Idle state and delete orbit if radius is invalid
+                        else:
+                            self.raise_popup = True
+                            self.path.kill()
+                            self.path = None
+                            self.state = "idle"
+
+
+                # Update path of ArcTracker only at Idle state
+                if self.path:
+                    self.path.update(mouse_state, key_state)
+
+            # At Ready state
+            elif self.state == "ready":
+                # Accepts only one input between left and right click
+                if not self.mouse_pressed and (mouse_state[LCLICK] ^ mouse_state[RCLICK]):
+                    self.mouse_pressed = True
+
+                    # Calculate all variables needed for rotation
                     self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+                    self.rotation_angular_speed = self.rotation_speed / self.rotation_radius
+                    self.relative_angle = math.atan2(self.y_pos - self.rotation_axis[1], self.x_pos - self.rotation_axis[0])
+                    self.direction_factor = -1 if mouse_state[LCLICK] else 1    # Set rotation direction
 
-                    # Change to Ready state and fix the rotation axis if radius of orbit is valid
-                    if self.rotation_radius >= self.min_path_radius:
-                        self.state = "ready"
-                    # Stay in Idle state and delete orbit if radius is invalid
-                    else:
-                        self.raise_popup = True
-                        self.path.kill()
-                        self.path = None
-                        self.state = "idle"
+                # Change to Moving state when releasing mouse button
+                if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
+                    self.mouse_pressed = False
+                    self.state = "Moving"
 
+                if (key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]) and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
+                    self.path.kill()
+                    self.path = None
+                    self.state = "idle"
 
-            # Update path of ArcTracker only at Idle state
-            if self.path:
-                self.path.update(mouse_state, key_state)
+            # At Moving state
+            else:
+                # Move ArcTracker
+                self.relative_angle += self.direction_factor * self.rotation_angular_speed / FPS
+                self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
+                self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
-        # At Ready state
-        elif self.state == "ready":
-            # Accepts only one input between left and right click
-            if not self.mouse_pressed and (mouse_state[LCLICK] ^ mouse_state[RCLICK]):
-                self.mouse_pressed = True
+                # Stop AcrTrakcer and delete its path if left mouse button pressed when moving
+                if not self.mouse_pressed and mouse_state[LCLICK]:
+                    self.rotation_angular_speed = 0
+                    self.mouse_pressed = True
+                    self.path.kill()
+                    self.path = None
 
-                # Calculate all variables needed for rotation
-                self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
-                self.rotation_angular_speed = self.rotation_speed / self.rotation_radius
-                self.relative_angle = math.atan2(self.y_pos - self.rotation_axis[1], self.x_pos - self.rotation_axis[0])
-                self.direction_factor = -1 if mouse_state[LCLICK] else 1    # Set rotation direction
+                # Return to Idle state if left mouse button released
+                if self.mouse_pressed and not mouse_state[LCLICK]:
+                    self.mouse_pressed = False
+                    self.state = "idle"
 
-            # Change to Moving state when releasing mouse button
-            if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
-                self.mouse_pressed = False
-                self.state = "Moving"
-
-            if (key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]) and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
-                self.path.kill()
-                self.path = None
-                self.state = "idle"
-
-        # At Moving state
-        else:
-            # Move ArcTracker
-            self.relative_angle += self.direction_factor * self.rotation_angular_speed / FPS
-            self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
-            self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
-
-            # Stop AcrTrakcer and delete its path if left mouse button pressed when moving
-            if not self.mouse_pressed and mouse_state[LCLICK]:
-                self.rotation_angular_speed = 0
-                self.mouse_pressed = True
-                self.path.kill()
-                self.path = None
-
-            # Return to Idle state if left mouse button released
-            if self.mouse_pressed and not mouse_state[LCLICK]:
-                self.mouse_pressed = False
-                self.state = "idle"
-
-        # Update position of ArcTracker
-        self.rect.centerx = round(self.x_pos)
-        self.rect.centery = round(self.y_pos)
+            # Update position of ArcTracker
+            self.rect.centerx = round(self.x_pos)
+            self.rect.centery = round(self.y_pos)
 
 
 class ArcTrackerPath(pygame.sprite.Sprite):
