@@ -364,6 +364,43 @@ class MinimumRadiusBorderLine(pygame.sprite.Sprite):
         """
 
 
+class Coin(pygame.sprite.Sprite):
+    """
+
+    """
+
+    group = pygame.sprite.Group()
+
+    def __init__(self, pos):
+        """
+
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.size = (10, 10)
+        self.image = pygame.Surface(self.size)
+        self.image.set_colorkey(BLACK)
+        pygame.draw.circle(self.image, YELLOW1, (5, 5), 5)
+        self.rect = self.image.get_rect(center=pos)
+
+    def initialize(self):
+        """
+        Initialize this coin
+
+        :return: None
+        """
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+
 class GoalPoint(pygame.sprite.Sprite):
     """
     A point where ArcTracker should reach in a single level.

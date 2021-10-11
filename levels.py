@@ -17,12 +17,13 @@ class Level:
     such as level number, minimum moves to clear, playtime, etc..
     """
 
-    def __init__(self, arctracker_pos_list: list, obstacle_list: list, goal_pos_list: list, minimum_moves: int):
+    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, minimum_moves: int):
         """
         Initializing method
 
         :param arctracker_pos_list: list of all arctrackers positions
         :param obstacle_list: list of obstacles in this level
+        :param coin_pos_list: list of all coin positions
         :param goal_pos_list: list of all goal point positions
         :param minimum_moves: minimum possible movements to clear this level
         """
@@ -36,6 +37,11 @@ class Level:
         self.obstacle_group = pygame.sprite.Group()
         for o in obstacle_list:
             self.obstacle_group.add(o)
+
+        # Generate and fill coin group
+        self.coin_group = pygame.sprite.Group()
+        for c in coin_pos_list:
+            self.coin_group.add(Coin(c))
 
         # Generate and fill goal group
         self.goal_group = pygame.sprite.Group()
@@ -63,6 +69,10 @@ class Level:
         for o in self.obstacle_group:
             o.initialize()
 
+        # Initialize all coins
+        for c in self.coin_group:
+            c.initialize()
+
         # Initialize all goal points
         for g in self.goal_group:
             g.initialize()
@@ -82,6 +92,7 @@ class Level:
         # Update all sprites in this level
         self.arctracker_group.update(mouse_state, key_state)
         self.obstacle_group.update(mouse_state, key_state)
+        self.coin_group.update(mouse_state, key_state)
         self.goal_group.update(mouse_state, key_state)
 
         # Detect collision between arc tracker and obstacles
@@ -91,10 +102,17 @@ class Level:
                     self.initialize()
                     break
 
+        # Detect collision between arc tracker and coins
+        for a in self.arctracker_group:
+            for c in self.coin_group:
+                if distance(a.rect.center, c.rect.center) < 20:
+                    c.kill()
+
         # Determine whether arc tracker reached to goal point
         for a in self.arctracker_group:
             for g in self.goal_group:
-                if distance(a.rect.center, g.rect.center) < 10 and not g.arctracker_matched:
+                # Lock-on will be available only when there is no coin left
+                if distance(a.rect.center, g.rect.center) < 10 and not g.arctracker_matched and len(self.coin_group) == 0:
                     a.level_complete = True
                     a.reject_path()
                     g.arctracker_matched = True
@@ -112,7 +130,8 @@ class Level:
         :return: None
         """
 
-        # Draw all obstacles in this level
+        # Draw all coins and obstacles in this level
+        self.coin_group.draw(surface)
         self.obstacle_group.draw(surface)
 
         # Draw all path of ArcTrackers
@@ -139,6 +158,7 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              minimum_moves=1),
 
@@ -151,6 +171,7 @@ level_dict = {
                  StaticRectangularObstacle(760, 0, 400, 600),
                  StaticRectangularObstacle(760, screen_height - 200, 400, 200)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(150, 150)],
              minimum_moves=1),
 
@@ -163,6 +184,7 @@ level_dict = {
                  StaticCircularObstacle(300, screen_height - 100, 700),
                  StaticCircularObstacle(screen_width - 300, 100, 700)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height - 150)],
              minimum_moves=2),
 
@@ -175,6 +197,7 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height // 2 - 20, 600, 40),
                  StaticCircularObstacle(screen_width // 2, screen_height // 2, 450)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(450, screen_height // 2 + 100)],
              minimum_moves=1),
 
@@ -193,6 +216,7 @@ level_dict = {
                  StaticCircularObstacle(1140, screen_height // 2, 150),
                  StaticCircularObstacle(1500, screen_height // 2, 150)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              minimum_moves=4),
 
@@ -203,6 +227,18 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height - 450, screen_width, 450),
                  StaticRectangularObstacle(screen_width - 300, 0, 300, screen_height)
              ],
+             coin_pos_list=[],
              goal_pos_list=[(screen_width - 350, screen_height // 2)],
-             minimum_moves=2)
+             minimum_moves=2),
+
+    7: Level(arctracker_pos_list=[(150, screen_height // 2)],
+             obstacle_list=[
+                 StaticRectangularObstacle(0, 0, screen_width, 20),
+                 StaticRectangularObstacle(0, 0, 20, screen_height),
+                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
+             ],
+             coin_pos_list=[(500, 500)],
+             goal_pos_list=[(screen_width - 150, screen_height // 2)],
+             minimum_moves=4)
 }
