@@ -294,6 +294,63 @@ class LevelButton(Button):
             gameplay_screen.show()
 
 
+class NextLevelButton(Button):
+    """
+    A Button class for transition to next level
+    """
+
+    def __init__(self, on_screen):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 100, 300, 100], "NEXT LEVEL", "verdana", 30, WHITE1, WHITE3)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
+
+    def operate(self):
+        """
+        NextLevelButton's own operation
+
+        :return: None
+        """
+
+        self.on_screen.intialize_level(self.on_screen.current_levelnum + 1)
+
+
+class BackToLevelSelectButton(Button):
+    """
+    A Button class for transition to next level
+    """
+
+    def __init__(self, on_screen):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 250, 300, 100], "LEVEL SELECT", "verdana", 30, WHITE1, WHITE3)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
+
+    def operate(self):
+        """
+        BackToLevelSelectButton's own operation
+
+        :return: None
+        """
+
+        self.on_screen.hide()
+        level_select_screen.show()
+
+
 class Text:
     """
     A text surface class to display all texts appearing in this game
@@ -638,6 +695,7 @@ class GamePlayScreen(Screen):
 
         self.current_levelnum_text = None
         self.current_level = None
+        self.current_levelnum = 0
 
         self.popup_text_box = None
 
@@ -651,8 +709,9 @@ class GamePlayScreen(Screen):
 
         self.manage_list.clear()
 
-        self.current_levelnum_text = Text(str(levelnum), "verdana", 400, (screen_width // 2, screen_height // 2), "center", WHITE3)
-        self.current_level = level_dict[levelnum]
+        self.current_levelnum = levelnum
+        self.current_levelnum_text = Text(str(self.current_levelnum), "verdana", 400, (screen_width // 2, screen_height // 2), "center", WHITE3)
+        self.current_level = level_dict[self.current_levelnum]
         self.manage_list.append(self.current_levelnum_text)
         self.manage_list.append(self.current_level)
 
