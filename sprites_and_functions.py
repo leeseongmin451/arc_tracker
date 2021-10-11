@@ -136,6 +136,9 @@ class ArcTracker(pygame.sprite.Sprite):
         # A reference to determine raise popup
         self.raise_popup = False
 
+        # Whether ArcTracker reached to GoalPoint
+        self.level_complete = False
+
         # Add this sprite to sprite groups
         self.group.add(self)
 
@@ -154,7 +157,11 @@ class ArcTracker(pygame.sprite.Sprite):
             self.borderline = None
         self.state = "idle"
         self.x_pos, self.y_pos = self.initial_pos
+
+        # Initializing all boolean variables
         self.mouse_pressed = False
+        self.raise_popup = False
+        self.level_complete = False
 
     def update(self, mouse_state, key_state) -> None:
         """
@@ -364,6 +371,9 @@ class GoalPoint(pygame.sprite.Sprite):
         self.frame_num = 0          # Current frame number of animation list
         self.image = goal_point_img_list[self.frame_num]        # Current image of GoalPoint
         self.rect = self.image.get_rect(center=self.pos)        # A virtual rectangle which encloses GoalPoint
+
+        #
+        self.arctracker_matched = False
 
 
     def update(self, mouse_state, key_state) -> None:

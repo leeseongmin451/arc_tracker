@@ -391,29 +391,35 @@ class PopupTextBox(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-        self.font = pygame.font.SysFont("verdana", 20)
-        self.text_surface = self.font.render(text, True, WHITE1)
-        self.text_rect = self.text_surface.get_rect()
+        # Create text surface object
+        self.font = pygame.font.SysFont("verdana", 20)              # Font and size of text
+        self.text_surface = self.font.render(text, True, WHITE1)    # Contents of text
+        self.text_rect = self.text_surface.get_rect()               # A virtual rectangle enclosing text surface
 
-        self.box_w = self.text_rect.w + 100
-        self.box_h = self.text_rect.h + 30
-        self.image = pygame.Surface((self.box_w, self.box_h))
-        self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center=(screen_width // 2, screen_height + 100))
-        pygame.draw.rect(self.image, WHITE3, [0, 0, self.box_w, self.box_h], 0, 10)
-        pygame.draw.rect(self.image, WHITE2, [0, 0, self.box_w, self.box_h], 4, 10)
+        # Create box surface object
+        self.box_w = self.text_rect.w + 100                     # Width of box (slightly longer than text)
+        self.box_h = self.text_rect.h + 30                      # Height of box (slightly longer than text)
+        self.image = pygame.Surface((self.box_w, self.box_h))   # Create box surface
+        self.image.set_colorkey(BLACK)                          # Make black background fully transparent
+        self.rect = self.image.get_rect(center=(screen_width // 2, screen_height + 100))    # A virtual rectangle enclosing box surface
+        pygame.draw.rect(self.image, WHITE3, [0, 0, self.box_w, self.box_h], 0, 10)         # Draw dark gray background in box surface
+        pygame.draw.rect(self.image, WHITE2, [0, 0, self.box_w, self.box_h], 4, 10)         # Draw light gray borderline in box surface
 
+        # Determine position of text surface and draw it in box surface
         self.text_rect.centerx = self.box_w // 2
         self.text_rect.centery = self.box_h // 2
-        self.image.blit(self.text_surface, self.text_rect)
+        self.image.blit(self.text_surface, self.text_rect)  # Draw text
 
-        self.display_time = self.text_rect.w * 0.005
-        self.display_frame_cnt = round(self.display_time * FPS)
+        # Set displaying time
+        self.display_time = self.text_rect.w * 0.005                # In seconds (determined by the length of text)
+        self.display_frame_cnt = round(self.display_time * FPS)     # In frame counts
         self.current_frame_cnt = 0
 
+        # Speed and acceleration for popping
         self.popup_speed = 800
         self.popup_acc = 1500
 
+        # Text box is currently going up or down
         self.moving_up = True
         self.moving_down = False
 
@@ -429,20 +435,28 @@ class PopupTextBox(pygame.sprite.Sprite):
         :return: None
         """
 
+        # While moving up
         if self.moving_up:
+            # Update current speed and acceleration
             self.popup_speed -= self.popup_acc / FPS
             self.rect.y -= self.popup_speed / FPS
+            # Stop moving and start displaying when speed goes to 0
             if self.popup_speed <= 0:
                 self.moving_up = False
 
+        # While moving down
         elif self.moving_down:
+            # Update current speed and acceleration
             self.popup_speed -= self.popup_acc / FPS
             self.rect.y -= self.popup_speed / FPS
+            # Kill this textbox when if it is completely out of the screen
             if self.rect.y > screen_height + 200:
                 self.kill()
 
+        # While displaying time
         else:
-            self.current_frame_cnt += 1
+            self.current_frame_cnt += 1     # Increase frame count
+            # Start moving down when frame is fully counted
             if self.current_frame_cnt >= self.display_frame_cnt:
                 self.moving_down = True
 
