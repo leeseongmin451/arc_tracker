@@ -18,64 +18,6 @@ def distance(pos1, pos2):
     return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
 
 
-def collide_with_line_segment(circular_sprite: pygame.sprite.Sprite, pos1, pos2) -> bool:
-    """
-    Detects if circular sprite collides with a line segment given by two positions
-
-    :param circular_sprite: circular sprite
-    :param pos1: one position of line segment
-    :param pos2: other position of line segment
-    :return: bool
-    """
-
-    # Get sprite's position & size
-    sprite_centerx = circular_sprite.rect.centerx
-    sprite_centery = circular_sprite.rect.centery
-    sprite_radius = circular_sprite.rect.w // 2
-
-    length = distance(pos1, pos2)                   # Length of line segment
-    x_diff = pos1[0] - pos2[0]                      # Difference of x coordinates of two positions
-    y_diff = pos1[1] - pos2[1]                      # Difference of y coordinates of two positions
-    x_mid = (pos1[0] + pos2[0]) / 2                 # x coordinate of midpoint of the segment
-    y_mid = (pos1[1] + pos2[1]) / 2                 # y coordinate of midpoint of the segment
-
-    close_to_line = abs(y_diff*sprite_centerx - x_diff*sprite_centery + pos1[0]*pos2[1] - pos1[1]*pos2[0]) / length <= sprite_radius
-    within_segment = abs(x_diff*sprite_centerx + y_diff*sprite_centery - x_diff*x_mid - y_diff*y_mid) / length <= length / 2
-
-    return close_to_line and within_segment
-
-
-def collide_with_rect(circular_sprite: pygame.sprite.Sprite, rectangular_sprite: pygame.sprite.Sprite) -> bool:
-    """
-    Detects if circular sprite collides with other rectangular sprite
-
-    :param circular_sprite: circular sprite
-    :param rectangular_sprite: rectangular sprite
-    :return: bool
-    """
-
-    # Get sprite's position & size
-    sprite_centerx = circular_sprite.rect.centerx
-    sprite_centery = circular_sprite.rect.centery
-    sprite_radius = circular_sprite.rect.w // 2
-
-    # Detect collision
-    rect = rectangular_sprite.rect
-    if abs(sprite_centerx - rect.centerx) > rect.w // 2 + sprite_radius or \
-            abs(sprite_centery - rect.centery) > rect.h // 2 + sprite_radius:
-        return False
-
-    # Dealing with corner case (circle is nearby rentangle's corner)
-    elif rect.w // 2 < abs(sprite_centerx - rect.centerx) <= rect.w // 2 + sprite_radius:
-        if rect.h // 2 < abs(sprite_centery - rect.centery) <= rect.h // 2 + sprite_radius:
-            return distance(circular_sprite.rect.center, rect.center) <= sprite_radius
-        else:
-            return True
-
-    else:
-        return True
-
-
 class ArcTracker(pygame.sprite.Sprite):
     """
     A sprite controlled by player
