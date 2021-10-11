@@ -61,6 +61,10 @@ class Level:
         for o in self.obstacle_group:
             o.initialize()
 
+        # Initialize all goal points
+        for g in self.goal_group:
+            g.initialize()
+
     def update(self, mouse_state, key_state) -> None:
         """
         Update all sprites(ArcTracker, obstacles, etc.) in this level

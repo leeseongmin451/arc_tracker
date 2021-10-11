@@ -375,6 +375,14 @@ class GoalPoint(pygame.sprite.Sprite):
         # Whether ArcTracker reached to GoalPoint
         self.arctracker_matched = False
 
+    def initialize(self):
+        """
+        Initialize this goal point
+
+        :return: None
+        """
+
+        self.arctracker_matched = False
 
     def update(self, mouse_state, key_state) -> None:
         """
