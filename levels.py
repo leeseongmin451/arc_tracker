@@ -194,8 +194,8 @@ level_dict = {
                  StaticRectangularObstacle(0, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height // 2 - 20, 600, 40),
-                 StaticCircularObstacle(screen_width // 2, screen_height // 2, 450)
+                 StaticRectangularObstacle(0, screen_height // 2 - 20, 550, 40),
+                 StaticInnerCurvedObstacle(StaticCircularObstacle, (screen_width // 2, screen_height // 2, 450), (screen_width // 2, screen_height // 2), 400)
              ],
              coin_pos_list=[],
              goal_pos_list=[(450, screen_height // 2 + 100)],
@@ -238,7 +238,7 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
-             coin_pos_list=[(500, 500)],
+             coin_pos_list=[(screen_width // 2, screen_height // 2)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              minimum_moves=4)
 }
