@@ -154,7 +154,7 @@ class LevelSelectButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 200, screen_height - 350, 400, 100], "SELECT LEVEL", "verdana", 50, WHITE1)
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 500, 400, 100], "SELECT LEVEL", "verdana", 50, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -169,6 +169,35 @@ class LevelSelectButton(Button):
 
         self.on_screen.hide()
         level_select_screen.show()
+
+
+class HowToPlayButton(Button):
+    """
+    A Button class for transition to HowToPlayScreen
+    """
+
+    def __init__(self, on_screen):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 350, 400, 100], "HOW TO PLAY", "verdana", 50, WHITE1)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
+
+    def operate(self):
+        """
+        HowToPlayButton's own operation
+
+        :return: None
+        """
+
+        self.on_screen.hide()
+        how_to_play_screen.show()
 
 
 class SettingsButton(Button):
@@ -658,6 +687,7 @@ class MainMenuScreen(Screen):
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
         self.level_select_button = LevelSelectButton(self)  # Button for level selection
+        self.how_to_play_button = HowToPlayButton(self)     # Button for how to play
         self.settings_button = SettingsButton(self)         # Button for settings
         self.quit_button = QuitButton(self)                 # Button for quitting game
 
@@ -701,6 +731,28 @@ class LevelSelectScreen(Screen):
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
+class HowToPlayScreen(Screen):
+    """
+    Screen for introducing how to play ArcTracker game
+
+    Has title, images, description, and main menu button
+    """
+
+    def __init__(self):
+        """
+        Initializing method
+        """
+
+        Screen.__init__(self)
+
+        self.title_text = Text("HOW TO PLAY", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
+        self.manage_list.append(self.title_text)            # Append this text to manage_list
+
+
+
+        self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
+
+
 class SettingsScreen(Screen):
     """
     Screen for settings
@@ -718,7 +770,6 @@ class SettingsScreen(Screen):
         self.title_text = Text("SETTINGS", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
-        """ Texts and buttons for setting """
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
@@ -818,5 +869,6 @@ class GamePlayScreen(Screen):
 
 mainmenu_screen = MainMenuScreen()          # Generate MainMenuScreen class instance
 level_select_screen = LevelSelectScreen()   # Generate LevelSelectScreen class instance
+how_to_play_screen = HowToPlayScreen()      # Generate HowToPlayScreen class instance
 settings_screen = SettingsScreen()          # Generate SettingsScreen class instance
 gameplay_screen = GamePlayScreen()          # Generate GamePlayScreen class instance

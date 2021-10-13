@@ -28,6 +28,10 @@ while init.running:
         level_select_screen.update(mouse, keys)
         level_select_screen.draw(screen)
 
+    elif how_to_play_screen.now_display:
+        how_to_play_screen.update(mouse, keys)
+        how_to_play_screen.draw(screen)
+
     elif settings_screen.now_display:
         settings_screen.update(mouse, keys)
         settings_screen.draw(screen)
