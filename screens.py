@@ -8,6 +8,72 @@ from sprites_and_functions import *
 from levels import level_dict
 
 
+class ImageView(pygame.sprite.Sprite):
+    """
+    A rectanguler object to display an image
+    """
+
+    def __init__(self, image, size, pos, fixpoint="topleft"):
+        """
+
+        :param image: image surface object to display
+        :param size: size of the image
+        :param pos: position of the image
+        :param fixpoint: fixpoint of the image
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.transform.scale(image, size)
+        self.rect = self.image.get_rect()
+        self.pos = pos
+        self.fixpoint = fixpoint
+        self.fix_position()
+
+    def fix_position(self):
+        """
+        Determine exact position of text using fixpoint
+        :return: None
+        """
+
+        if self.fixpoint == "topleft":
+            self.rect.topleft = self.pos
+        elif self.fixpoint == "midtop":
+            self.rect.midtop = self.pos
+        elif self.fixpoint == "topright":
+            self.rect.topright = self.pos
+        elif self.fixpoint == "midleft":
+            self.rect.midleft = self.pos
+        elif self.fixpoint == "center":
+            self.rect.center = self.pos
+        elif self.fixpoint == "midright":
+            self.rect.midright = self.pos
+        elif self.fixpoint == "bottomleft":
+            self.rect.bottomleft = self.pos
+        elif self.fixpoint == "midbottom":
+            self.rect.midbottom = self.pos
+        elif self.fixpoint == "bottomright":
+            self.rect.bottomright = self.pos
+
+    def update(self, mouse_state, key_state):
+        """
+        Updating method
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+    def draw(self, surface):
+        """
+        Draw text on a given surface
+        :param surface: surface to draw on
+        :return: None
+        """
+
+        surface.blit(self.image, self.rect)
+
+
 class Button(pygame.sprite.Sprite):
     """
     A rectangular button class
@@ -748,7 +814,15 @@ class HowToPlayScreen(Screen):
         self.title_text = Text("HOW TO PLAY", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
-
+        img_size = (369, 235)
+        self.exp1_img = ImageView(example_game_img1, img_size, (150, 200))
+        self.exp2_img = ImageView(example_game_img2, img_size, (150, 400))
+        self.exp3_img = ImageView(example_game_img3, img_size, (150, 600))
+        self.exp4_img = ImageView(example_game_img4, img_size, (150, 800))
+        self.manage_list.append(self.exp1_img)
+        self.manage_list.append(self.exp2_img)
+        self.manage_list.append(self.exp3_img)
+        self.manage_list.append(self.exp4_img)
 
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
