@@ -77,3 +77,8 @@ for i in range(60):             # Load and append all frames to the list
     img_frame = pygame.image.load(f"img/character/goal_point_anim/goal_point_{i}.png").convert()
     img_frame.set_colorkey(BLACK)
     goal_point_img_list.append(img_frame)
+
+example_game_img1 = pygame.image.load("img/example_play_capture/example_1.png")
+example_game_img2 = pygame.image.load("img/example_play_capture/example_2.png")
+example_game_img3 = pygame.image.load("img/example_play_capture/example_3.png")
+example_game_img4 = pygame.image.load("img/example_play_capture/example_4.png")
