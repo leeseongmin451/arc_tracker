@@ -66,7 +66,7 @@ class ImageView(pygame.sprite.Sprite):
 
     def draw(self, surface):
         """
-        Draw text on a given surface
+        Draw this image on given surface
         :param surface: surface to draw on
         :return: None
         """
@@ -525,6 +525,79 @@ class Text:
         surface.blit(self.text_surface, self.rect)
 
 
+class TextGroupBox(pygame.sprite.Sprite):
+    """
+    An invisible box which contains multiple line of texts
+    """
+
+    def __init__(self, text_list, font, font_size, pos, color=WHITE1, margin=10, line_space=10):
+        """
+        Initializing method
+
+        :param text_list: list of text string to display
+        :param font: font of text
+        :param font_size: size of text
+        :param pos: position of topleft of box
+        :param color: color of text
+        :param margin: margin between text and box boundary (in px)
+        :param line_space: space between texts (in px)
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        # Font, size, and color of text
+        self.font_size = font_size
+        self.font = pygame.font.SysFont(font, self.font_size)
+        self.color = color
+
+        # Text surfaces and rects list
+        self.text_surface_list = []
+        self.text_rect_list = []
+
+        # Fill in all lists
+        for text in text_list:
+            text_surface = self.font.render(text, True, self.color)
+            text_rect = text_surface.get_rect()
+
+            self.text_surface_list.append(text_surface)
+            self.text_rect_list.append(text_rect)
+
+        # Calculate box size using width of texts, height of texts, number of texts, margin, and line space
+        lines_cnt = len(text_list)
+        self.box_height = 2 * margin + lines_cnt * self.font_size + (lines_cnt - 1) * line_space
+        self.box_width = 2 * margin + max([r.w for r in self.text_rect_list])
+
+        # Create box surface and rect
+        self.image = pygame.Surface((self.box_width, self.box_height))
+        self.rect = self.image.get_rect(topleft=pos)
+
+        # Draw all texts in the box
+        current_text_pos_y = margin
+        for surf, rect in zip(self.text_surface_list, self.text_rect_list):
+            rect.topleft = (margin, current_text_pos_y)
+            self.image.blit(surf, rect)
+            current_text_pos_y += self.font_size + line_space
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+    def draw(self, surface: pygame.Surface):
+        """
+        Draw this box in given surface
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        surface.blit(self.image, self.rect)
+
+
 class PopupTextBox(pygame.sprite.Sprite):
     """
     A text box which pops up during gameplay
@@ -814,6 +887,7 @@ class HowToPlayScreen(Screen):
         self.title_text = Text("HOW TO PLAY", "verdana", 70, (screen_width // 2, screen_height // 6), "center")     # Text object
         self.manage_list.append(self.title_text)            # Append this text to manage_list
 
+        # Example images for explaining how to play
         img_size = (369, 235)
         self.exp1_img = ImageView(example_game_img1, img_size, (150, 200))
         self.exp2_img = ImageView(example_game_img2, img_size, (150, 400))
