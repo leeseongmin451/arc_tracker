@@ -898,6 +898,68 @@ class HowToPlayScreen(Screen):
         self.manage_list.append(self.exp3_img)
         self.manage_list.append(self.exp4_img)
 
+        # Description text box
+        self.desc_textbox1 = TextGroupBox(text_list=["Welcome to Arc Tracker!!",
+                                                     "Just move your 'Arc Tracker (AT)' to get to the goal!! (yellow circle)"],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(550, 270))
+        self.desc_textbox2 = TextGroupBox(text_list=["You can create a circular 'Orbit' passing through your AT",
+                                                     "by setting the center using left mouse button.",
+                                                     "First, press the left mouse button. Then an orbit centered at the",
+                                                     "mouse cursor (gray circle line) will appear. You can drag mouse",
+                                                     "cursor to modulate radius and center position of the orbit.",
+                                                     "If you release the mouse button, the orbit will be fixed.",
+                                                     "You can also cancel the orbit by pressing C or ESC key."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(550, 420))
+        self.desc_textbox3 = TextGroupBox(text_list=["The red circle line surrounding your AT indicates the minimum",
+                                                     "radius of the orbit you can create. You cannot create an orbit",
+                                                     "with radius shorter than that of the red circle line.",
+                                                     "If you release mouse button in the red circle line, the orbit",
+                                                     "will be automatically canceled and disappear."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(550, 660))
+        self.desc_textbox4 = TextGroupBox(text_list=["After setting the orbit, click the mouse button to move your AT.",
+                                                     "The AT will orbit counterclockwise if you click left mouse button,",
+                                                     "and will orbit clockwise if you click right mouse button.",
+                                                     "Click left mouse button again to stop moving AT."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(550, 860))
+        self.desc_textbox5 = TextGroupBox(text_list=["There are many kind of obstacles including border on each side of",
+                                                     "screen. If your AT touches any of them, you'll fail the level and",
+                                                     "AT will return to the intial position."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(1200, 270))
+        self.desc_textbox6 = TextGroupBox(text_list=["There may be some coins (yellow dots) that you should collect",
+                                                     "using AT. You must collect all coins in the level before moving AT",
+                                                     "to the goal."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(1200, 400))
+        self.desc_textbox7 = TextGroupBox(text_list=["Each level has 'PAR' value, the minimum possible move counts.",
+                                                     "Try to clear levels using as few movements as you can! Maybe you",
+                                                     "can clear some levels even in fewer movements than PAR value..."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(1200, 530))
+        self.desc_textbox8 = TextGroupBox(text_list=["ENJOY THE GAME! :)"],
+                                          font="verdana",
+                                          font_size=40,
+                                          pos=(1200, 660))
+        self.manage_list.append(self.desc_textbox1)
+        self.manage_list.append(self.desc_textbox2)
+        self.manage_list.append(self.desc_textbox3)
+        self.manage_list.append(self.desc_textbox4)
+        self.manage_list.append(self.desc_textbox5)
+        self.manage_list.append(self.desc_textbox6)
+        self.manage_list.append(self.desc_textbox7)
+        self.manage_list.append(self.desc_textbox8)
+
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
 
