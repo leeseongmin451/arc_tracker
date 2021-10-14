@@ -238,7 +238,8 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
-             coin_pos_list=[(screen_width // 2, screen_height // 2)],
+             coin_pos_list=[(1706, 454), (1586, 334), (1450, 237), (1293, 165), (1129, 121), (960, 107),
+                            (791, 121), (627, 165), (473, 237), (334, 334), (214, 454)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             minimum_moves=4)
+             minimum_moves=1)
 }
