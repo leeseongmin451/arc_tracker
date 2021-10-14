@@ -242,5 +242,16 @@ level_dict = {
              coin_pos_list=[(1706, 454), (1586, 334), (1450, 237), (1293, 165), (1129, 121), (960, 107),
                             (791, 121), (627, 165), (473, 237), (334, 334), (214, 454)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             par=1)
+             par=1),
+
+    8: Level(arctracker_pos_list=[(150, screen_height // 2)],
+             obstacle_list=[
+                 StaticRectangularObstacle(0, 0, screen_width, 20),
+                 StaticRectangularObstacle(0, 0, 20, screen_height),
+                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
+             ],
+             coin_pos_list=[(960, 200), (960, 540), (960, 880)],
+             goal_pos_list=[(screen_width - 150, screen_height // 2)],
+             par=2)
 }
