@@ -17,7 +17,7 @@ class Level:
     such as level number, minimum moves to clear, playtime, etc..
     """
 
-    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, minimum_moves: int):
+    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int):
         """
         Initializing method
 
@@ -25,7 +25,7 @@ class Level:
         :param obstacle_list: list of obstacles in this level
         :param coin_pos_list: list of all coin positions
         :param goal_pos_list: list of all goal point positions
-        :param minimum_moves: minimum possible movements to clear this level
+        :param par: minimum possible movements to clear this level
         """
 
         # Generate and fill ArcTracker group
@@ -47,7 +47,7 @@ class Level:
         for g in goal_pos_list:
             self.goal_group.add(GoalPoint(g))
 
-        self.minimum_moves = minimum_moves      # Minimum possible movements to clear this level
+        self.minimum_moves = par      # Minimum possible movements to clear this level
         self.play_framecount = 0                # Level playtime counted in frames
         self.level_playtime = 0                 # Level playtime counted in seconds
 
@@ -160,7 +160,7 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             minimum_moves=1),
+             par=1),
 
     2: Level(arctracker_pos_list=[(screen_width - 150, 150)],
              obstacle_list=[
@@ -173,7 +173,7 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(150, 150)],
-             minimum_moves=1),
+             par=1),
 
     3: Level(arctracker_pos_list=[(150, 150)],
              obstacle_list=[
@@ -186,7 +186,7 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height - 150)],
-             minimum_moves=2),
+             par=2),
 
     4: Level(arctracker_pos_list=[(450, screen_height // 2 - 100)],
              obstacle_list=[
@@ -195,11 +195,12 @@ level_dict = {
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height // 2 - 20, 550, 40),
-                 StaticInnerCurvedObstacle(StaticCircularObstacle, (screen_width // 2, screen_height // 2, 450), (screen_width // 2, screen_height // 2), 400)
+                 StaticInnerCurvedObstacle(StaticCircularObstacle, (screen_width // 2, screen_height // 2, 450),
+                                           (screen_width // 2, screen_height // 2), 400)
              ],
              coin_pos_list=[],
              goal_pos_list=[(450, screen_height // 2 + 100)],
-             minimum_moves=1),
+             par=1),
 
     5: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
@@ -218,7 +219,7 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             minimum_moves=4),
+             par=4),
 
     6: Level(arctracker_pos_list=[(350, screen_height // 2)],
              obstacle_list=[
@@ -229,7 +230,7 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 350, screen_height // 2)],
-             minimum_moves=2),
+             par=2),
 
     7: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
@@ -241,5 +242,5 @@ level_dict = {
              coin_pos_list=[(1706, 454), (1586, 334), (1450, 237), (1293, 165), (1129, 121), (960, 107),
                             (791, 121), (627, 165), (473, 237), (334, 334), (214, 454)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             minimum_moves=1)
+             par=1)
 }
