@@ -220,7 +220,7 @@ class LevelSelectButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 200, screen_height - 500, 400, 100], "SELECT LEVEL", "verdana", 50, WHITE1)
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 440, 400, 100], "SELECT LEVEL", "verdana", 50, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -249,7 +249,7 @@ class HowToPlayButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 200, screen_height - 350, 400, 100], "HOW TO PLAY", "verdana", 50, WHITE1)
+        Button.__init__(self, [screen_width // 2 - 200, screen_height - 320, 400, 100], "HOW TO PLAY", "verdana", 50, WHITE1)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -906,7 +906,7 @@ class HowToPlayScreen(Screen):
                                           pos=(550, 270))
         self.desc_textbox2 = TextGroupBox(text_list=["You can create a circular 'Orbit' passing through your AT",
                                                      "by setting the center using left mouse button.",
-                                                     "First, press the left mouse button. Then an orbit centered at the",
+                                                     "First, hold the left mouse button. Then an orbit centered at the",
                                                      "mouse cursor (gray circle line) will appear. You can drag mouse",
                                                      "cursor to modulate radius and center position of the orbit.",
                                                      "If you release the mouse button, the orbit will be fixed.",
