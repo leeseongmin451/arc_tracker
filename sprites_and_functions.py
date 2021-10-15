@@ -609,7 +609,35 @@ class StaticInnerCurvedObstacle(Obstacle):
         relative_centery = inner_curve_center[1] - self.rect.y
         pygame.draw.circle(self.image, BLACK, (relative_centerx, relative_centery), inner_curve_radius)
         self.image.set_colorkey(BLACK)
-        self.mask = self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+
+class StaticImageObstacle(Obstacle):
+    """
+    A normal, non-moving obstacle class which uses a black-and-white image
+
+    Black will be considered as background, and white will be the obstacle
+    """
+
+    group = pygame.sprite.Group()   # StaticInnerCurvedObstacle's own sprite group
+
+    def __init__(self, image: pygame.Surface, rect: list):
+        """
+        Initializing method
+
+        :param image: A black-and-white image
+        :param rect: Position and size of this obstacle
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.transform.scale(image, rect[2:])    # Create a new rectangular surface object
+        self.image.set_colorkey(BLACK)                          # Make the black bakground fully transparent
+        self.mask = pygame.mask.from_surface(self.image)        # Create a mask object for collision detection
+        self.rect = self.image.get_rect(topleft=rect[:2])       # A virtual rectangle which encloses StaticImageObstacle
 
         # Add this sprite to sprite groups
         self.group.add(self)
