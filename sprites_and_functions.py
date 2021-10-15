@@ -308,14 +308,19 @@ class MinimumRadiusBorderLine(pygame.sprite.Sprite):
 
 class Coin(pygame.sprite.Sprite):
     """
+    A coin class which ArcTracker should collect
 
+    Coin has a tiny round shape, and wellow color. ArcTracker must collect all coins
+    before reaching goal to complete a level.
     """
 
     group = pygame.sprite.Group()
 
     def __init__(self, pos):
         """
+        Initializing method
 
+        :param pos: center position of coin
         """
 
         pygame.sprite.Sprite.__init__(self)
