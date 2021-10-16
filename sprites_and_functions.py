@@ -641,3 +641,59 @@ class StaticImageObstacle(Obstacle):
 
         # Add this sprite to sprite groups
         self.group.add(self)
+
+
+class RotatingObstacle(Obstacle):
+    """
+    A rotating obstacle using its own axis
+    """
+
+    group = pygame.sprite.Group()   # RotatingObstacle' own sprite group
+
+    def __init__(self, image: pygame.Surface, axis_pos: (int, int), rotation_speed: float):
+        """
+        Initializing method
+
+        :param image: A black-and-white image
+        :param axis_pos: Position of rotation axis
+        :param rotation_speed: Rotationg speed (degrees/sec)
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = image                                  # Create a new rectangular surface object
+        self.image_orig = image                             # Used for rotating
+        self.image.set_colorkey(BLACK)                      # Make the black bakground fully transparent
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+        self.rect = self.image.get_rect(center=axis_pos)    # A virtual rectangle which encloses RotatingObstacle
+        self.center_orig = axis_pos                         # For preserving rotation axis
+
+        self.rotation_speed = rotation_speed    # Angular speed of rotation in degrees/sec
+        self.current_angle = 0
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+        self.current_angle = 0      # Reset angle to 0
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        self.current_angle += self.rotation_speed / FPS   # Update angle
+        self.image = pygame.transform.rotate(self.image_orig, self.current_angle)
+        self.image.set_colorkey(BLACK)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect(center=self.center_orig)
