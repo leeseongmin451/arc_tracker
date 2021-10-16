@@ -643,12 +643,12 @@ class StaticImageObstacle(Obstacle):
         self.group.add(self)
 
 
-class RotatingObstacle(Obstacle):
+class RotatingImageObstacle(Obstacle):
     """
     A rotating obstacle using its own axis
     """
 
-    group = pygame.sprite.Group()   # RotatingObstacle' own sprite group
+    group = pygame.sprite.Group()   # RotatingImageObstacle' own sprite group
 
     def __init__(self, image: pygame.Surface, axis_pos: (int, int), rotation_speed: float):
         """
@@ -665,7 +665,7 @@ class RotatingObstacle(Obstacle):
         self.image_orig = image                             # Used for rotating
         self.image.set_colorkey(BLACK)                      # Make the black bakground fully transparent
         self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
-        self.rect = self.image.get_rect(center=axis_pos)    # A virtual rectangle which encloses RotatingObstacle
+        self.rect = self.image.get_rect(center=axis_pos)    # A virtual rectangle which encloses RotatingImageObstacle
         self.center_orig = axis_pos                         # For preserving rotation axis
 
         self.rotation_speed = rotation_speed    # Angular speed of rotation in degrees/sec

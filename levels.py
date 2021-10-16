@@ -261,7 +261,7 @@ level_dict = {
                  StaticRectangularObstacle(0, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                 RotatingObstacle(test_img, (960, 540), 90)
+                 RotatingImageObstacle(test_img, (960, 540), 90)
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
