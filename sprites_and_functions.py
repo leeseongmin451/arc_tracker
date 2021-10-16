@@ -643,6 +643,151 @@ class StaticImageObstacle(Obstacle):
         self.group.add(self)
 
 
+class ObstaclePath:
+    """
+    A path needed for moving obstacles
+
+    It is represented by a combination of multiple segments
+    """
+
+    def __init__(self):
+        pass
+
+
+class ObstaclePathSegment:
+    """
+    A segment as a part of the ObstaclePath
+    """
+
+    def __init__(self):
+        pass
+
+
+class LinearMovingRectangularObstacle(Obstacle):
+    """
+    A rectangular obstacle which moves through straight line in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class LinearMovingCircularObstacle(Obstacle):
+    """
+    A circular obstacle which moves through straight line in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class LinearMovingImageObstacle(Obstacle):
+    """
+    An obstacle which moves through straight line in a given period
+
+    Its shape will be determined by masking the given image
+    """
+
+    def __init__(self):
+        pass
+
+
+class OrbittingRectangularObstacle(Obstacle):
+    """
+    A rectangular obstacle which orbits around a given point in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class OrbittingCircularObstacle(Obstacle):
+    """
+    A circular obstacle which orbits around a given point in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class OrbittingImageObstacle(Obstacle):
+    """
+    An obstacle which orbits around a given point in a given period
+
+    Its shape will be determined by masking the given image
+    """
+
+    def __init__(self):
+        pass
+
+
+class OpenedGeneralPathRectangularObstacle(Obstacle):
+    """
+    A rectangular obstacle which moves through opened path in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class OpenedGeneralPathCircularObstacle(Obstacle):
+    """
+    A circular obstacle which moves through opened path in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class OpenedGeneralPathImageObstacle(Obstacle):
+    """
+    An obstacle which moves through opened path in a given period
+
+    Its shape will be determined by masking the given image
+    """
+
+    def __init__(self):
+        pass
+
+
+class ClosedGeneralPathRectangularObstacle(Obstacle):
+    """
+    A rectangular obstacle which moves through closed path in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class ClosedGeneralPathCircularObstacle(Obstacle):
+    """
+    A circular obstacle which moves through closed path in a given period
+    """
+
+    def __init__(self):
+        pass
+
+
+class ClosedGeneralPathImageObstacle(Obstacle):
+    """
+    An obstacle which moves through closed path in a given period
+
+    Its shape will be determined by masking the given image
+    """
+
+    def __init__(self):
+        pass
+
+
+class RotatingRectangularObstacle(Obstacle):
+    """
+    A rotating rectangular obstacle using its own axis
+    """
+
+    def __init__(self):
+        pass
+
+
 class RotatingImageObstacle(Obstacle):
     """
     A rotating obstacle using its own axis
@@ -697,3 +842,23 @@ class RotatingImageObstacle(Obstacle):
         self.image.set_colorkey(BLACK)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=self.center_orig)
+
+
+class AngleFollowerRectangularObstacle(Obstacle):
+    """
+    A rectangular obstacle whose rotation exactly follows ArcTracker's angular motion
+    """
+
+    def __init__(self):
+        pass
+
+
+class AngleFollowerImageObstacle(Obstacle):
+    """
+    An obstacle whose rotation exactly follows ArcTracker's angular motion
+
+    Its shape will be determined by masking the given image
+    """
+
+    def __init__(self):
+        pass
