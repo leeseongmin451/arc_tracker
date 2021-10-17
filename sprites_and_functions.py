@@ -39,11 +39,12 @@ class ArcTracker(pygame.sprite.Sprite):
     """
     group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
-    def __init__(self, pos, id_num):
+    def __init__(self, pos, id_num, min_orbit_radius):
         """
         Initializing method
         :param pos: starting position
         :param id_num: ID number for multiple ArcTrackers, 1 for green, 2 for blue, and 3 for red
+        :param min_orbit_radius: minimum radius of the generatable orbit
         """
 
         pygame.sprite.Sprite.__init__(self)
@@ -69,7 +70,7 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # ArcTrackerPath class instance will be allocated if needed
         self.path = None
-        self.min_path_radius = 150
+        self.min_path_radius = min_orbit_radius
 
         # MinimumRadiusBorderLine class instance will be allocated if needed
         self.borderline = None

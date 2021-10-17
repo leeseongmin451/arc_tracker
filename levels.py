@@ -17,7 +17,7 @@ class Level:
     such as level number, minimum moves to clear, playtime, etc..
     """
 
-    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int):
+    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int, min_orbit_radius=150):
         """
         Initializing method
 
@@ -26,13 +26,14 @@ class Level:
         :param coin_pos_list: list of all coin positions
         :param goal_pos_list: list of all goal point positions
         :param par: minimum possible movements to clear this level
+        :param min_orbit_radius: minimum radius of the generatable orbit
         """
 
         # Generate and fill ArcTracker group
         self.arctracker_group = pygame.sprite.Group()
         id_num = 1
         for a in arctracker_pos_list:
-            self.arctracker_group.add(ArcTracker(a, id_num))
+            self.arctracker_group.add(ArcTracker(a, id_num, min_orbit_radius))
             id_num += 1
 
         # Generate and fill obstacle group
