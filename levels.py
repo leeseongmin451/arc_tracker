@@ -30,8 +30,10 @@ class Level:
 
         # Generate and fill ArcTracker group
         self.arctracker_group = pygame.sprite.Group()
+        id_num = 1
         for a in arctracker_pos_list:
-            self.arctracker_group.add(ArcTracker(a))
+            self.arctracker_group.add(ArcTracker(a, id_num))
+            id_num += 1
 
         # Generate and fill obstacle group
         self.obstacle_group = pygame.sprite.Group()
@@ -255,15 +257,14 @@ level_dict = {
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
              par=2),
 
-    9: Level(arctracker_pos_list=[(150, screen_height // 2)],
+    9: Level(arctracker_pos_list=[(150, 300), (150, screen_height // 2), (150, screen_height - 300)],
              obstacle_list=[
                  StaticRectangularObstacle(0, 0, screen_width, 20),
                  StaticRectangularObstacle(0, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                 RotatingImageObstacle(test_img, (960, 540), 90)
+                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
              coin_pos_list=[],
-             goal_pos_list=[(screen_width - 150, screen_height // 2)],
+             goal_pos_list=[(screen_width - 150, 300), (screen_width - 150, screen_height // 2), (screen_width - 150, screen_height - 300)],
              par=2)
 }

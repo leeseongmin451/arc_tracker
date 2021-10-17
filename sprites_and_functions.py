@@ -39,10 +39,11 @@ class ArcTracker(pygame.sprite.Sprite):
     """
     group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
-    def __init__(self, pos):
+    def __init__(self, pos, id_num):
         """
         Initializing method
         :param pos: starting position
+        :param id_num: ID number for multiple ArcTrackers, 1 for green, 2 for blue, and 3 for red
         """
 
         pygame.sprite.Sprite.__init__(self)
@@ -51,11 +52,12 @@ class ArcTracker(pygame.sprite.Sprite):
         self.state = "idle"             # ["idle", "ready", "moving"]
         self.initial_pos = pos          # Initial position
         self.x_pos, self.y_pos = pos    # Position on screen
+        self.id_num = id_num            # ID number of ArcTracker
 
-        self.size = (30, 30)                                                    # Size of ArcTracker
-        self.image = pygame.transform.scale(arc_tracker_img, self.size)         # Image of ArcTracker
-        self.mask = pygame.mask.from_surface(self.image)                        # Create a mask object for collision detection
-        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))        # A virtual rectangle which encloses ArcTracker
+        self.size = (30, 30)                                                                # Size of ArcTracker
+        self.image = pygame.transform.scale(arc_tracker_img_list[id_num - 1], self.size)    # Image of ArcTracker
+        self.mask = pygame.mask.from_surface(self.image)                                    # Create a mask object for collision detection
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))                    # A virtual rectangle which encloses ArcTracker
 
         self.rotation_axis = (0, 0)         # Position of axis ArcTracker rotate around
         self.rotation_radius = 0            # Distance between ArcTracker's position and rotation axis
