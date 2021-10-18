@@ -267,5 +267,17 @@ level_dict = {
              ],
              coin_pos_list=[(900, 540)],
              goal_pos_list=[(960, 580)],
-             par=2)
+             par=2),
+
+    10: Level(arctracker_pos_list=[(150, 300)],
+              obstacle_list=[
+                  StaticRectangularObstacle(0, 0, screen_width, 20),
+                  StaticRectangularObstacle(0, 0, 20, screen_height),
+                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
+                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
+                  RotatingRectangularObstacle((30, 200), (screen_width // 2, screen_height // 2), 30, 0, (100, 100))
+              ],
+              coin_pos_list=[],
+              goal_pos_list=[(screen_width - 150, 300)],
+              par=2)
 }

@@ -787,8 +787,66 @@ class RotatingRectangularObstacle(Obstacle):
     A rotating rectangular obstacle using its own axis
     """
 
-    def __init__(self):
-        pass
+    group = pygame.sprite.Group()   # RotatingRectangularObstacle' own sprite group
+
+    def __init__(self, size, rotation_axis, angular_speed, initial_angle=0, center_offset=(0, 0)):
+        """
+        Initializing method
+
+        :param size: size of the rectangle
+        :param rotation_axis: axis of rotation
+        :param angular_speed: speed of rotation (deg/sec)
+        :param initial_angle: angular offset (deg)
+        :param center_offset: relative position of center of rectangle with respect to rotation_axis
+        """
+
+        Obstacle.__init__(self)
+
+        self.rotation_axis = rotation_axis                      # Axis of rotation
+        self.rotation_radius = distance((0, 0), center_offset)  # Radius of rotation
+        self.angular_speed = angular_speed                      # Angular speed of rotation
+        self.offset_angle = math.atan2(center_offset[1], center_offset[0]) * 180 / math.pi  # Angle by center_offset
+        self.initial_angle = initial_angle + self.offset_angle  # Set starting angle (will be used for initializing)
+        self.current_angle = initial_angle + self.offset_angle  # Current angle is the same as initial angle
+
+        # Generate rectangle image leaving a thin margin for accurate rotation
+        self.rect_image = pygame.Surface((size[0] + 2, size[1] + 2))
+        pygame.draw.rect(self.rect_image, WHITE1, (1, 1, size[0], size[1]))
+
+        self.image_orig = self.rect_image                   # Used for rotating
+        self.image = pygame.transform.rotate(self.image_orig, initial_angle)    # Make image using initial angle
+        self.image.set_colorkey(BLACK)                      # Make black background fully transparent
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+        # A virtual rectangle which encloses RotatingRectangularObstacle
+        self.rect = self.image.get_rect(center=[a + f for a, f in zip(self.rotation_axis, center_offset)])
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+        self.current_angle = self.initial_angle     # Reset angle to initial value
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        self.current_angle += self.angular_speed / FPS
+        self.image = pygame.transform.rotate(self.image_orig, self.current_angle - self.offset_angle)
+        self.image.set_colorkey(BLACK)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect(center=(self.rotation_axis[0] + self.rotation_radius * math.cos(self.current_angle * math.pi / 180),
+                                                self.rotation_axis[1] - self.rotation_radius * math.sin(self.current_angle * math.pi / 180)))
 
 
 class RotatingImageObstacle(Obstacle):
@@ -807,7 +865,7 @@ class RotatingImageObstacle(Obstacle):
         :param rotation_speed: Rotationg speed (degrees/sec)
         """
 
-        pygame.sprite.Sprite.__init__(self)
+        Obstacle.__init__(self)
 
         self.image = image                                  # Create a new rectangular surface object
         self.image_orig = image                             # Used for rotating
