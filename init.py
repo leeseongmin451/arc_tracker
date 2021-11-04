@@ -79,6 +79,11 @@ arc_tracker_img3 = pygame.image.load("img/character/arc_tracker_3.png").convert(
 arc_tracker_img3.set_colorkey(BLACK)                                                # Remove black region of the image
 arc_tracker_img_list = [arc_tracker_img1, arc_tracker_img2, arc_tracker_img3]       # List of all ArcTracker images
 
+axis_marker_O_img = pygame.image.load("img/character/axis_marker_O.png").convert()  # O-shaped image of axis marker
+axis_marker_O_img.set_colorkey(BLACK)
+axis_marker_X_img = pygame.image.load("img/character/axis_marker_X.png").convert()  # O-shaped image of axis marker
+axis_marker_X_img.set_colorkey(BLACK)
+
 goal_point_img_list = []        # List of frame for animating GoalPoint
 for i in range(60):             # Load and append all frames to the list
     img_frame = pygame.image.load(f"img/character/goal_point_anim/goal_point_{i}.png").convert()
@@ -95,4 +100,4 @@ example_game_img4 = pygame.image.load("img/example_play_capture/example_4.png").
 example_game_img4.set_colorkey(BLACK)
 
 # Load all obstacle images
-test_img = pygame.image.load("img/obstacles/test/10-1.png").convert()       # Image for newly testing obstacle
+test_img_1 = pygame.image.load("img/obstacles/test/10-1.png").convert()       # Image for newly testing obstacle

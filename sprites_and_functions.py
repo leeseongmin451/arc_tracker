@@ -77,6 +77,9 @@ class ArcTracker(pygame.sprite.Sprite):
         # MinimumRadiusBorderLine class instance will be allocated if needed
         self.borderline = None
 
+        # RotationAxisMarker class instance will be allocated if needed
+        self.axis_marker = None
+
         # To indicate whether mouse button is pressed
         self.mouse_pressed = False
 
@@ -102,6 +105,9 @@ class ArcTracker(pygame.sprite.Sprite):
         if self.borderline:
             self.borderline.kill()
             self.borderline = None
+        if self.axis_marker:
+            self.axis_marker.kill()
+            self.axis_marker = None
         self.state = "idle"
         self.x_pos, self.y_pos = self.initial_pos
 
@@ -137,6 +143,7 @@ class ArcTracker(pygame.sprite.Sprite):
                     self.mouse_pressed = True
                     self.path = ArcTrackerPath(mouse_state[CURPOS], self.rect.center)                   # Generate ArcTrackerPath
                     self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
+                    self.axis_marker = RotationAxisMarker(self)                                         # Generate RotationAxisMarker
 
                 # Set the position of rotation axis to current cursor position until mouse button is released
                 if self.mouse_pressed:
@@ -147,6 +154,8 @@ class ArcTracker(pygame.sprite.Sprite):
                     if not mouse_state[LCLICK]:
                         self.borderline.kill()
                         self.borderline = None
+                        self.axis_marker.kill()
+                        self.axis_marker = None
                         self.mouse_pressed = False
 
                         # Calculate rotation radius
@@ -163,6 +172,9 @@ class ArcTracker(pygame.sprite.Sprite):
                 # Update path of ArcTracker only at Idle state
                 if self.path:
                     self.path.update(mouse_state, key_state)
+                # Update axis marker of ArcTracker only at Idle state
+                if self.axis_marker:
+                    self.axis_marker.update(mouse_state, key_state)
 
             # At Ready state
             elif self.state == "ready":
@@ -316,6 +328,58 @@ class MinimumRadiusBorderLine(pygame.sprite.Sprite):
         :param key_state: Dictionary of event from pressing keyboard
         :return: None
         """
+
+
+class RotationAxisMarker(pygame.sprite.Sprite):
+    """
+    A marker temporarily appears while setting orbit of ArcTracker
+
+    This represents the position of rotation axis.
+    If mouse cursor is out of borderline, it will appear as a blueish "O" sign, otherwise a reddish "X" sign.
+    """
+
+    group = pygame.sprite.Group()   # RotationAxisMarker' own sprite group
+
+    def __init__(self, arc_tracker: ArcTracker):
+        """
+        Initializing method
+
+        :param arc_tracker: ArcTracker which this marker belongs to
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.at = arc_tracker       # ArcTracker which this marker belongs to
+
+        # Determine current image according to whether cursor position is out of borderline
+        self.image_list = [axis_marker_O_img, axis_marker_X_img]
+        if distance(mouse[CURPOS], self.at.rect.center) >= self.at.min_path_radius:
+            self.image = self.image_list[0]
+        else:
+            self.image = self.image_list[1]
+        self.rect = self.image.get_rect(center=mouse[CURPOS])
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        self.rect.center = mouse_state[CURPOS]      # Update position
+        print(self.rect.center)
+
+        # Update current image according to whether cursor position is out of borderline
+        self.image_list = [axis_marker_O_img, axis_marker_X_img]
+        if distance(mouse_state[CURPOS], self.at.rect.center) >= self.at.min_path_radius:
+            self.image = self.image_list[0]
+        else:
+            self.image = self.image_list[1]
 
 
 class Coin(pygame.sprite.Sprite):

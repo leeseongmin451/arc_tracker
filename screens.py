@@ -3,7 +3,6 @@ Defines all scenes(screens) of the game
 """
 import pygame.sprite
 
-import init
 from sprites_and_functions import *
 from levels import level_dict
 

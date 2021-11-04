@@ -154,6 +154,11 @@ class Level:
             if a.borderline:
                 surface.blit(a.borderline.image, a.borderline.rect)
 
+        # Draw all markers of ArcTrackers
+        for a in self.arctracker_group:
+            if a.axis_marker:
+                surface.blit(a.axis_marker.image, a.axis_marker.rect)
+
         # Draw all ArcTrackers and GoalPoints in this level
         self.goal_group.draw(surface)
         self.arctracker_group.draw(surface)
@@ -282,7 +287,7 @@ level_dict = {
                   StaticRectangularObstacle(0, 0, 20, screen_height),
                   StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                   StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                  AngleFollowerImageObstacle(test_img, (1500, 540))
+                  AngleFollowerImageObstacle(test_img_1, (1500, 540))
               ],
               coin_pos_list=[],
               goal_pos_list=[(screen_width - 150, 540)],
