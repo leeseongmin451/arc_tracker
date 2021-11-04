@@ -110,6 +110,7 @@ class ArcTracker(pygame.sprite.Sprite):
             self.axis_marker = None
         self.state = "idle"
         self.x_pos, self.y_pos = self.initial_pos
+        self.rect.center = self.initial_pos
 
         # Initializing all boolean variables
         self.mouse_pressed = False
