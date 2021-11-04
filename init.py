@@ -61,6 +61,7 @@ screen = pygame.display.set_mode((screen_width, screen_height), flags, 16)
 # Frame control
 FPS = 60
 fps_clock = pygame.time.Clock()
+DELTA_TIME = 0
 
 # Mouse control event dict
 mouse = {LCLICK: False, MCLICK: False, RCLICK: False, SCRLUP: False, SCRLDN: False, CURPOS: (0, 0)}

@@ -3,6 +3,7 @@ Define all sprites and functions needed
 """
 import pygame.sprite
 
+import init
 from init import *
 import math
 
@@ -184,7 +185,7 @@ class ArcTracker(pygame.sprite.Sprite):
             # At Moving state
             else:
                 # Move ArcTracker
-                self.relative_angle += self.direction_factor * self.rotation_angular_speed / FPS
+                self.relative_angle += self.direction_factor * self.rotation_angular_speed * init.DELTA_TIME
                 self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
                 self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
@@ -650,7 +651,7 @@ class ObstaclePath:
     """
     A path needed for moving obstacles
 
-    It is represented by a combination of multiple segments
+    It is represented by a combination of multiple ObstaclePathSegment
     """
 
     def __init__(self):
@@ -841,7 +842,7 @@ class RotatingRectangularObstacle(Obstacle):
         :return: None
         """
 
-        self.current_angle += self.angular_speed / FPS
+        self.current_angle += self.angular_speed * init.DELTA_TIME
         self.image = pygame.transform.rotate(self.image_orig, self.current_angle - self.offset_angle)
         self.image.set_colorkey(BLACK)
         self.mask = pygame.mask.from_surface(self.image)
@@ -898,7 +899,7 @@ class RotatingImageObstacle(Obstacle):
         :return: None
         """
 
-        self.current_angle += self.rotation_speed / FPS   # Update angle
+        self.current_angle += self.rotation_speed * init.DELTA_TIME          # Update angle
         self.image = pygame.transform.rotate(self.image_orig, self.current_angle)
         self.image.set_colorkey(BLACK)
         self.mask = pygame.mask.from_surface(self.image)

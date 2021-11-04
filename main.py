@@ -4,6 +4,7 @@ Actually running game loop
 
 
 from screens import *
+import init
 
 
 mainmenu_screen.show()
@@ -40,5 +41,5 @@ while init.running:
         gameplay_screen.update(mouse, keys)
         gameplay_screen.draw(screen)
 
-    pygame.display.flip()               # Update all display changes and show them
-    fps_clock.tick(FPS)                 # Make program never run at more than "FPS" frames per second
+    pygame.display.flip()                           # Update all display changes and show them
+    init.DELTA_TIME = fps_clock.tick(FPS) / 1000    # Get time difference between present and previous game loop in seconds
