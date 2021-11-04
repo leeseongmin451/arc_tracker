@@ -977,10 +977,14 @@ class HowToPlayScreen(Screen):
                                           font="verdana",
                                           font_size=15,
                                           pos=(1200, 530))
-        self.desc_textbox8 = TextGroupBox(text_list=["ENJOY THE GAME! :)"],
+        self.desc_textbox8 = TextGroupBox(text_list=["If you want to quit a level while playing, press Q key."],
+                                          font="verdana",
+                                          font_size=15,
+                                          pos=(1200, 650))
+        self.desc_textbox9 = TextGroupBox(text_list=["ENJOY THE GAME! :)"],
                                           font="verdana",
                                           font_size=40,
-                                          pos=(1200, 660))
+                                          pos=(1200, 720))
         self.manage_list.append(self.desc_textbox1)
         self.manage_list.append(self.desc_textbox2)
         self.manage_list.append(self.desc_textbox3)
@@ -989,8 +993,22 @@ class HowToPlayScreen(Screen):
         self.manage_list.append(self.desc_textbox6)
         self.manage_list.append(self.desc_textbox7)
         self.manage_list.append(self.desc_textbox8)
+        self.manage_list.append(self.desc_textbox9)
 
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
+
+    def draw(self, surface):
+        """
+        Overrides draw method from Screen class to draw an additional line
+
+        :param surface: Surface to draw on
+        :return: None
+        """
+
+        Screen.draw(self, surface)
+
+        # Draw a vertical line to separate description texts
+        pygame.draw.line(surface, WHITE1, (1130, 270), (1130, 1000), 2)
 
 
 class SettingsScreen(Screen):
