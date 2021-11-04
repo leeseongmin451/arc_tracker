@@ -400,7 +400,7 @@ class NextLevelButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 100, 300, 100], "NEXT LEVEL", "verdana", 30, WHITE1, WHITE3)
+        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 100, 300, 70], "NEXT LEVEL", "verdana", 30, WHITE1, WHITE3)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -416,6 +416,34 @@ class NextLevelButton(Button):
         self.on_screen.intialize_level(self.on_screen.current_levelnum + 1)
 
 
+class RetryButton(Button):
+    """
+    A Button class for replaying current level after clearing it
+    """
+
+    def __init__(self, on_screen):
+        """
+        Initializing method
+
+        Fix all properties of Button class
+        """
+
+        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 200, 300, 70], "RETRY", "verdana", 30, WHITE1, WHITE3)
+
+        # Screen class in which this button is included
+        self.on_screen = on_screen
+        self.on_screen.manage_list.append(self)     # Add this button to this screen
+
+    def operate(self):
+        """
+        RetryButton's own operation
+
+        :return: None
+        """
+
+        self.on_screen.intialize_level(self.on_screen.current_levelnum)
+
+
 class BackToLevelSelectButton(Button):
     """
     A Button class for transition to next level
@@ -428,7 +456,7 @@ class BackToLevelSelectButton(Button):
         Fix all properties of Button class
         """
 
-        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 250, 300, 100], "LEVEL SELECT", "verdana", 30, WHITE1, WHITE3)
+        Button.__init__(self, [screen_width // 2 - 150, screen_height // 2 + 300, 300, 70], "LEVEL SELECT", "verdana", 30, WHITE1, WHITE3)
 
         # Screen class in which this button is included
         self.on_screen = on_screen
@@ -714,6 +742,7 @@ class LevelClearedWindow:
 
         self.cleared_msg = Text("LEVEL CLEARED!!", "verdana", 50, (screen_width // 2, screen_height // 2 - 100), "center", BLACK)
         self.next_level_button = NextLevelButton(on_screen)
+        self.retry_button = RetryButton(on_screen)
         self.level_select_button = BackToLevelSelectButton(on_screen)
 
     def update(self, mouse_state, key_state) -> None:
@@ -726,6 +755,7 @@ class LevelClearedWindow:
         """
 
         self.next_level_button.update(mouse_state, key_state)
+        self.retry_button.update(mouse_state, key_state)
         self.level_select_button.update(mouse_state, key_state)
 
     def draw(self, surface: pygame.Surface):
@@ -739,6 +769,7 @@ class LevelClearedWindow:
         surface.blit(self.image, self.rect)
         self.cleared_msg.draw(surface)
         self.next_level_button.draw(surface)
+        self.retry_button.draw(surface)
         self.level_select_button.draw(surface)
 
 
