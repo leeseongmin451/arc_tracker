@@ -95,4 +95,4 @@ example_game_img4 = pygame.image.load("img/example_play_capture/example_4.png").
 example_game_img4.set_colorkey(BLACK)
 
 # Load all obstacle images
-test_img = pygame.image.load("img/obstacles/test/9-1.png").convert()
+test_img = pygame.image.load("img/obstacles/test/10-1.png").convert()       # Image for newly testing obstacle

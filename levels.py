@@ -31,15 +31,22 @@ class Level:
 
         # Generate and fill ArcTracker group
         self.arctracker_group = pygame.sprite.Group()
+        self.arctracker_list = []
         id_num = 1
         for a in arctracker_pos_list:
-            self.arctracker_group.add(ArcTracker(a, id_num, min_orbit_radius))
+            new_arctracker = ArcTracker(a, id_num, min_orbit_radius)
+            self.arctracker_group.add(new_arctracker)
+            self.arctracker_list.append(new_arctracker)
             id_num += 1
 
         # Generate and fill obstacle group
         self.obstacle_group = pygame.sprite.Group()
         for o in obstacle_list:
             self.obstacle_group.add(o)
+
+            # Assign ArcTracker if there is a AngleFollower-kind of obstacle
+            if isinstance(o, AngleFollowerImageObstacle):
+                o.assign_arctracker(self.arctracker_list[o.at_index])
 
         # Generate and fill coin group
         self.coin_group = pygame.sprite.Group()
@@ -269,15 +276,15 @@ level_dict = {
              goal_pos_list=[(960, 580)],
              par=2),
 
-    10: Level(arctracker_pos_list=[(150, 300)],
+    10: Level(arctracker_pos_list=[(150, 540)],
               obstacle_list=[
                   StaticRectangularObstacle(0, 0, screen_width, 20),
                   StaticRectangularObstacle(0, 0, 20, screen_height),
                   StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
                   StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                  RotatingRectangularObstacle((30, 200), (screen_width // 2, screen_height // 2), 30, 0, (100, 100))
+                  AngleFollowerImageObstacle(test_img, (1500, 540))
               ],
               coin_pos_list=[],
-              goal_pos_list=[(screen_width - 150, 300)],
+              goal_pos_list=[(screen_width - 150, 540)],
               par=2)
 }

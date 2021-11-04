@@ -68,6 +68,7 @@ class ArcTracker(pygame.sprite.Sprite):
         # Relative angular position of ArcTracker with respect to rotation axis measured from horizontal x axis
         self.relative_angle = 0
         self.direction_factor = 1           # 1 for counterclockwise, -1 for clockwise
+        self.angular_speed_per_frame = 0
 
         # ArcTrackerPath class instance will be allocated if needed
         self.path = None
@@ -126,6 +127,9 @@ class ArcTracker(pygame.sprite.Sprite):
 
         # All operations of ArcTracker are available only before reaching goal point
         if not self.level_complete:
+            # Angular speed will be nonzero only at Moving state
+            self.angular_speed_per_frame = 0
+
             # At Idle state
             if self.state == "idle":
                 # Enters to axis setting mode when holding mouse left button
@@ -185,7 +189,8 @@ class ArcTracker(pygame.sprite.Sprite):
             # At Moving state
             else:
                 # Move ArcTracker
-                self.relative_angle += self.direction_factor * self.rotation_angular_speed * init.DELTA_TIME
+                self.angular_speed_per_frame = self.direction_factor * self.rotation_angular_speed * init.DELTA_TIME
+                self.relative_angle += self.angular_speed_per_frame
                 self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
                 self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
 
@@ -204,6 +209,9 @@ class ArcTracker(pygame.sprite.Sprite):
             # Update position of ArcTracker
             self.rect.centerx = round(self.x_pos)
             self.rect.centery = round(self.y_pos)
+
+        else:
+            self.angular_speed_per_frame = 0
 
     def reject_path(self) -> None:
         """
@@ -922,5 +930,71 @@ class AngleFollowerImageObstacle(Obstacle):
     Its shape will be determined by masking the given image
     """
 
-    def __init__(self):
-        pass
+    group = pygame.sprite.Group()   # AngleFollowerImageObstacle' own sprite group
+
+    def __init__(self, image: pygame.Surface, axis_pos: (int, int), at_index=0):
+        """
+        Initializing method
+
+        :param image: Image of obstacle
+        :param axis_pos: Position of rotation axis
+        :param at_index: Index of ArcTracker list in level
+        """
+
+        Obstacle.__init__(self)
+
+        self.image = image                                  # Create a new rectangular surface object
+        self.image_orig = image                             # Used for rotating
+        self.image.set_colorkey(BLACK)                      # Make the black bakground fully transparent
+        self.mask = pygame.mask.from_surface(self.image)    # Create a mask object for collision detection
+        self.rect = self.image.get_rect(center=axis_pos)    # A virtual rectangle which encloses RotatingImageObstacle
+        self.center_orig = axis_pos                         # For preserving rotation axis
+
+        self.current_angle = 0
+        self.at_index = at_index
+        self.following_at = None                            # ArcTracker to follow rotation angle (will be assigned at level class initialization)
+
+        self.current_at_angle = self.last_at_angle = 0
+        self.angle_diff = (self.current_at_angle - self.last_at_angle) * 180 / math.pi
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+    def assign_arctracker(self, arctracker: ArcTracker):
+        """
+
+        :param arctracker:
+        :return: None
+        """
+
+        self.following_at = arctracker
+        self.current_at_angle = self.last_at_angle = self.following_at.relative_angle
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+        self.current_angle = 0      # Reset angle to 0
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        # Update angle
+        self.current_angle -= self.following_at.angular_speed_per_frame * 180 / math.pi
+        self.last_at_angle = self.current_at_angle
+        self.current_at_angle = self.following_at.relative_angle
+
+        # Update image according to current angle
+        self.image = pygame.transform.rotate(self.image_orig, self.current_angle)
+        self.image.set_colorkey(BLACK)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect(center=self.center_orig)
