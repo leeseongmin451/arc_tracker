@@ -372,7 +372,6 @@ class RotationAxisMarker(pygame.sprite.Sprite):
         """
 
         self.rect.center = mouse_state[CURPOS]      # Update position
-        print(self.rect.center)
 
         # Update current image according to whether cursor position is out of borderline
         self.image_list = [axis_marker_O_img, axis_marker_X_img]
