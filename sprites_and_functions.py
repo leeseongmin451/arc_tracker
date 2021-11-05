@@ -446,6 +446,9 @@ class GoalPoint(pygame.sprite.Sprite):
         # Whether ArcTracker reached to GoalPoint
         self.arctracker_matched = False
 
+        self.sec_per_frame = 1 / FPS        # Seconds per frame
+        self.animated_time = 0              # Elapsed time from init
+
     def initialize(self):
         """
         Initialize this goal point
@@ -467,7 +470,9 @@ class GoalPoint(pygame.sprite.Sprite):
         """
 
         self.image = goal_point_img_list[self.frame_num]
-        self.frame_num = (self.frame_num + 1) % 60
+        #self.frame_num = (self.frame_num + 1) % 60
+        self.animated_time += init.DELTA_TIME
+        self.frame_num = int(self.animated_time / self.sec_per_frame) % 60
 
 
 class Obstacle(pygame.sprite.Sprite):
