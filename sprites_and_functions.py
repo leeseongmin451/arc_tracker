@@ -6,6 +6,8 @@ import pygame.sprite
 import init
 from init import *
 import math
+from typing import Union
+import copy
 
 
 def distance(pos1, pos2):
@@ -239,6 +241,243 @@ class ArcTracker(pygame.sprite.Sprite):
         self.state = "idle"
 
 
+class ArcTrackerClone(pygame.sprite.Sprite):
+    """
+    Moves in exactly the same pattern with ArcTracker
+
+    When rotation axis of ArcTracker is set, another axis for ArcTrackerClone will be set.
+
+    """
+    group = pygame.sprite.Group()       # ArcTrackers' own sprite group
+
+    def __init__(self, pos, id_num, min_orbit_radius, host: ArcTracker, move_opposite_direction=False):
+        """
+        Initializing method
+        :param pos: starting position
+        :param id_num: ID number for multiple ArcTrackers, 1 for green, 2 for blue, and 3 for red
+        :param min_orbit_radius: minimum radius of the generatable orbit
+        :param host: ArcTracker to follow movement
+        :param move_opposite_direction: boolean value for moving direction (True for movind opposite direction of its pair ArcTracker)
+        """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        # Basic attributes
+        self.state = "idle"             # ["idle", "ready", "moving"]
+        self.initial_pos = pos          # Initial position
+        self.x_pos, self.y_pos = pos    # Position on screen
+        self.id_num = id_num            # ID number of ArcTrackerClone
+        # Determine whether move to the same or opposite direction to ArcTracker
+        self.move_opposite_direction = move_opposite_direction
+
+        self.size = (30, 30)                                                                # Size of ArcTrackerClone
+        # Image of ArcTrackerClone
+        if move_opposite_direction:
+            self.image = pygame.transform.scale(arc_tracker_clone_img_list[id_num - 1], self.size)
+        else:
+            self.image = pygame.transform.scale(arc_tracker_counter_clone_img_list[id_num - 1], self.size)
+        self.mask = pygame.mask.from_surface(self.image)                                    # Create a mask object for collision detection
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))                    # A virtual rectangle which encloses ArcTrackerClone
+
+        self.rotation_axis = (0, 0)         # Position of axis ArcTrackerClone rotate around
+        self.rotation_radius = 0            # Distance between ArcTrackerClone's position and rotation axis
+        self.rotation_speed = 360           # px/sec (NOT an angular speed)
+        self.rotation_angular_speed = 0     # rad/sec
+        # Relative angular position of ArcTrackerClone with respect to rotation axis measured from horizontal x axis
+        self.relative_angle = 0
+        self.direction_factor = 1           # 1 for counterclockwise, -1 for clockwise
+        self.angular_speed_per_frame = 0
+
+        # ArcTrackerPath class instance will be allocated if needed
+        self.path = None
+        self.min_path_radius = min_orbit_radius
+
+        # MinimumRadiusBorderLine class instance will be allocated if needed
+        self.borderline = None
+
+        # RotationAxisMarker class instance will be allocated if needed
+        self.axis_marker = None
+
+        # To indicate whether mouse button is pressed
+        self.mouse_pressed = False
+
+        # A reference to determine raise popup
+        self.raise_popup = False
+
+        # Whether ArcTracker reached to GoalPoint
+        self.level_complete = False
+
+        # Add this sprite to sprite groups
+        self.group.add(self)
+
+        # ArcTracker to follow movement
+        self.host = host
+
+        # Relative x, y, position of rotation axis with respect to ArcTrackerClone
+        self.relative_axis_x = 0
+        self.relative_axis_y = 0
+
+        # Position of its own rotation axis (determined by cursor position)
+        self.new_axis = (0, 0)
+
+
+    def initialize(self):
+        """
+        Initializing method during gameplay
+
+        :return: None
+        """
+
+        if self.path:
+            self.path.kill()
+            self.path = None
+        if self.borderline:
+            self.borderline.kill()
+            self.borderline = None
+        if self.axis_marker:
+            self.axis_marker.kill()
+            self.axis_marker = None
+        self.state = "idle"
+        self.x_pos, self.y_pos = self.initial_pos
+        self.rect.center = self.initial_pos
+
+        # Initializing all boolean variables
+        self.mouse_pressed = False
+        self.raise_popup = False
+        self.level_complete = False
+
+    def update(self, mouse_state, key_state) -> None:
+        """
+        Updating method needed for all sprite class
+
+        :param mouse_state: Dictionary of clicking event and position info
+        :param key_state: Dictionary of event from pressing keyboard
+        :return: None
+        """
+
+        # All operations of ArcTrackerClone are available only before reaching goal point
+        if not self.level_complete:
+            # Angular speed will be nonzero only at Moving state
+            self.angular_speed_per_frame = 0
+
+            # At Idle state
+            if self.state == "idle":
+                # Enters to axis setting mode when holding mouse left button
+                if not self.mouse_pressed and mouse_state[LCLICK]:
+                    self.mouse_pressed = True
+
+                    self.relative_axis_x = mouse_state[CURPOS][0] - self.rect.centerx
+                    self.relative_axis_y = mouse_state[CURPOS][1] - self.rect.centery
+                    self.new_axis = (mouse_state[CURPOS][0] + self.relative_axis_x,
+                                     mouse_state[CURPOS][1] + self.relative_axis_y)
+
+                    self.path = ArcTrackerPath(self.new_axis, self.rect.center)                   # Generate ArcTrackerPath
+                    self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
+                    self.axis_marker = RotationAxisMarker(self)                                         # Generate RotationAxisMarker
+
+                # Set the position of rotation axis to current cursor position until mouse button is released
+                if self.mouse_pressed:
+                    self.rotation_axis = self.new_axis
+
+                    # When releasing mouse left button
+                    # And delete MinimumRadiusBorderLine
+                    if not mouse_state[LCLICK]:
+                        self.borderline.kill()
+                        self.borderline = None
+                        self.axis_marker.kill()
+                        self.axis_marker = None
+                        self.mouse_pressed = False
+
+                        # Calculate rotation radius
+                        self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+
+                        # Change to Ready state and fix the rotation axis if radius of orbit is valid
+                        if self.rotation_radius >= self.min_path_radius:
+                            self.state = "ready"
+                        # Stay in Idle state and delete orbit if radius is invalid
+                        else:
+                            self.raise_popup = True
+                            self.reject_path()
+
+                # Update path of ArcTrackerClone only at Idle state
+                if self.path:
+                    new_mouse_state = copy.deepcopy(mouse_state)
+                    self.new_axis = (mouse_state[CURPOS][0] + self.relative_axis_x,
+                                     mouse_state[CURPOS][1] + self.relative_axis_y)
+                    new_mouse_state[CURPOS] = self.new_axis
+
+                    self.path.update(new_mouse_state, key_state)
+                # Update axis marker of ArcTrackerClone only at Idle state
+                if self.axis_marker:
+                    self.axis_marker.update(mouse_state, key_state)
+
+            # At Ready state
+            elif self.state == "ready":
+                # Accepts only one input between left and right click
+                if not self.mouse_pressed and (mouse_state[LCLICK] ^ mouse_state[RCLICK]):
+                    self.mouse_pressed = True
+
+                    # Calculate all variables needed for rotation
+                    self.rotation_radius = distance((self.x_pos, self.y_pos), self.rotation_axis)
+                    self.rotation_angular_speed = self.rotation_speed / self.rotation_radius
+                    self.relative_angle = math.atan2(self.y_pos - self.rotation_axis[1], self.x_pos - self.rotation_axis[0])
+
+                    # Set rotation direction of ArcTrackerClone
+                    if self.move_opposite_direction:
+                        self.direction_factor = -1 if mouse_state[LCLICK] else 1
+                    else:
+                        self.direction_factor = 1 if mouse_state[LCLICK] else -1
+
+                # Change to Moving state when releasing mouse button
+                if self.mouse_pressed and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
+                    self.mouse_pressed = False
+                    self.state = "Moving"
+
+                if (key_state[pygame.K_ESCAPE] or key_state[pygame.K_c]) and not (mouse_state[LCLICK] or mouse_state[RCLICK]):
+                    self.path.kill()
+                    self.path = None
+                    self.state = "idle"
+
+            # At Moving state
+            else:
+                # Move ArcTrackerClone
+                self.angular_speed_per_frame = self.direction_factor * self.rotation_angular_speed * init.DELTA_TIME
+                self.relative_angle += self.angular_speed_per_frame
+                self.x_pos = self.rotation_axis[0] + self.rotation_radius * math.cos(self.relative_angle)
+                self.y_pos = self.rotation_axis[1] + self.rotation_radius * math.sin(self.relative_angle)
+
+                # Stop ArcTrackerClone and delete its path if left mouse button pressed when moving
+                if not self.mouse_pressed and mouse_state[LCLICK]:
+                    self.rotation_angular_speed = 0
+                    self.mouse_pressed = True
+                    self.path.kill()
+                    self.path = None
+
+                # Return to Idle state if left mouse button released
+                if self.mouse_pressed and not mouse_state[LCLICK]:
+                    self.mouse_pressed = False
+                    self.state = "idle"
+
+            # Update position of ArcTrackerClone
+            self.rect.centerx = round(self.x_pos)
+            self.rect.centery = round(self.y_pos)
+
+        else:
+            self.angular_speed_per_frame = 0
+
+    def reject_path(self) -> None:
+        """
+        Delete path
+
+        :return: None
+        """
+
+        if self.path:
+            self.path.kill()
+            self.path = None
+        self.state = "idle"
+
+
 class ArcTrackerPath(pygame.sprite.Sprite):
     """
     A virtual circular guideline where ArcTracker passes through
@@ -341,7 +580,7 @@ class RotationAxisMarker(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()   # RotationAxisMarker' own sprite group
 
-    def __init__(self, arc_tracker: ArcTracker):
+    def __init__(self, arc_tracker: Union[ArcTracker, ArcTrackerClone]):
         """
         Initializing method
 
