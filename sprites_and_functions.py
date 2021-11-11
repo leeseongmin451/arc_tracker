@@ -272,7 +272,7 @@ class ArcTrackerClone(pygame.sprite.Sprite):
 
         self.size = (30, 30)                                                                # Size of ArcTrackerClone
         # Image of ArcTrackerClone
-        if move_opposite_direction:
+        if not move_opposite_direction:
             self.image = pygame.transform.scale(arc_tracker_clone_img_list[id_num - 1], self.size)
         else:
             self.image = pygame.transform.scale(arc_tracker_counter_clone_img_list[id_num - 1], self.size)
@@ -427,7 +427,7 @@ class ArcTrackerClone(pygame.sprite.Sprite):
                     self.relative_angle = math.atan2(self.y_pos - self.rotation_axis[1], self.x_pos - self.rotation_axis[0])
 
                     # Set rotation direction of ArcTrackerClone
-                    if self.move_opposite_direction:
+                    if not self.move_opposite_direction:
                         self.direction_factor = -1 if mouse_state[LCLICK] else 1
                     else:
                         self.direction_factor = 1 if mouse_state[LCLICK] else -1
