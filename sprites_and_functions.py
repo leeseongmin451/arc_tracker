@@ -366,10 +366,10 @@ class ArcTrackerClone(pygame.sprite.Sprite):
                 if not self.mouse_pressed and mouse_state[LCLICK]:
                     self.mouse_pressed = True
 
-                    self.relative_axis_x = mouse_state[CURPOS][0] - self.rect.centerx
-                    self.relative_axis_y = mouse_state[CURPOS][1] - self.rect.centery
-                    self.new_axis = (mouse_state[CURPOS][0] + self.relative_axis_x,
-                                     mouse_state[CURPOS][1] + self.relative_axis_y)
+                    self.relative_axis_x = mouse_state[CURPOS][0] - self.host.rect.centerx
+                    self.relative_axis_y = mouse_state[CURPOS][1] - self.host.rect.centery
+                    self.new_axis = (self.rect.centerx + self.relative_axis_x,
+                                     self.rect.centerx + self.relative_axis_y)
 
                     self.path = ArcTrackerPath(self.new_axis, self.rect.center)                   # Generate ArcTrackerPath
                     self.borderline = MinimumRadiusBorderLine(self.rect.center, self.min_path_radius)   # Generate MinimumRadiusBorderLine
@@ -399,17 +399,21 @@ class ArcTrackerClone(pygame.sprite.Sprite):
                             self.raise_popup = True
                             self.reject_path()
 
+                # Calculate current position of rotation axis of ArcTrackerClone
+                new_mouse_state = copy.deepcopy(mouse_state)
+
+                self.relative_axis_x = mouse_state[CURPOS][0] - self.host.rect.centerx
+                self.relative_axis_y = mouse_state[CURPOS][1] - self.host.rect.centery
+                self.new_axis = (self.rect.centerx + self.relative_axis_x,
+                                 self.rect.centery + self.relative_axis_y)
+                new_mouse_state[CURPOS] = self.new_axis
+
                 # Update path of ArcTrackerClone only at Idle state
                 if self.path:
-                    new_mouse_state = copy.deepcopy(mouse_state)
-                    self.new_axis = (mouse_state[CURPOS][0] + self.relative_axis_x,
-                                     mouse_state[CURPOS][1] + self.relative_axis_y)
-                    new_mouse_state[CURPOS] = self.new_axis
-
                     self.path.update(new_mouse_state, key_state)
                 # Update axis marker of ArcTrackerClone only at Idle state
                 if self.axis_marker:
-                    self.axis_marker.update(mouse_state, key_state)
+                    self.axis_marker.update(new_mouse_state, key_state)
 
             # At Ready state
             elif self.state == "ready":
