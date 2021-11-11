@@ -73,11 +73,27 @@ running = True
 # Loading images
 arc_tracker_img1 = pygame.image.load("img/character/arc_tracker_1.png").convert()   # Image of Arc tracker (green)
 arc_tracker_img1.set_colorkey(BLACK)                                                # Remove black region of the image
-arc_tracker_img2 = pygame.image.load("img/character/arc_tracker_2.png").convert()   # Image of Arc tracker (green)
+arc_tracker_img2 = pygame.image.load("img/character/arc_tracker_2.png").convert()   # Image of Arc tracker (blue)
 arc_tracker_img2.set_colorkey(BLACK)                                                # Remove black region of the image
-arc_tracker_img3 = pygame.image.load("img/character/arc_tracker_3.png").convert()   # Image of Arc tracker (green)
+arc_tracker_img3 = pygame.image.load("img/character/arc_tracker_3.png").convert()   # Image of Arc tracker (red)
 arc_tracker_img3.set_colorkey(BLACK)                                                # Remove black region of the image
 arc_tracker_img_list = [arc_tracker_img1, arc_tracker_img2, arc_tracker_img3]       # List of all ArcTracker images
+
+arc_tracker_clone_img1 = pygame.image.load("img/character/arc_tracker_1_clone.png").convert()           # Image of Arc tracker clone (green)
+arc_tracker_clone_img1.set_colorkey(BLACK)                                                              # Remove black region of the image
+arc_tracker_clone_img2 = pygame.image.load("img/character/arc_tracker_2_clone.png").convert()           # Image of Arc tracker clone (blue)
+arc_tracker_clone_img2.set_colorkey(BLACK)                                                              # Remove black region of the image
+arc_tracker_clone_img3 = pygame.image.load("img/character/arc_tracker_3_clone.png").convert()           # Image of Arc tracker clone (red)
+arc_tracker_clone_img3.set_colorkey(BLACK)                                                              # Remove black region of the image
+arc_tracker_clone_img_list = [arc_tracker_clone_img1, arc_tracker_clone_img2, arc_tracker_clone_img3]   # List of all ArcTrackerClone images
+
+arc_tracker_counter_clone_img1 = pygame.image.load("img/character/arc_tracker_1_counter_clone.png").convert()                           # Image of Arc tracker_counter clone (green)
+arc_tracker_counter_clone_img1.set_colorkey(BLACK)                                                                                      # Remove black region of the image
+arc_tracker_counter_clone_img2 = pygame.image.load("img/character/arc_tracker_2_counter_clone.png").convert()                           # Image of Arc tracker_counter clone (blue)
+arc_tracker_counter_clone_img2.set_colorkey(BLACK)                                                                                      # Remove black region of the image
+arc_tracker_counter_clone_img3 = pygame.image.load("img/character/arc_tracker_3_counter_clone.png").convert()                           # Image of Arc tracker_counter clone (red)
+arc_tracker_counter_clone_img3.set_colorkey(BLACK)                                                                                      # Remove black region of the image
+arc_tracker_counter_clone_img_list = [arc_tracker_counter_clone_img1, arc_tracker_counter_clone_img2, arc_tracker_counter_clone_img3]   # List of all ArcTrackerClone images
 
 axis_marker_O_img = pygame.image.load("img/character/axis_marker_O.png").convert()  # O-shaped image of axis marker
 axis_marker_O_img.set_colorkey(BLACK)
