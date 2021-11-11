@@ -17,7 +17,7 @@ class Level:
     such as level number, minimum moves to clear, playtime, etc..
     """
 
-    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int, min_orbit_radius=150):
+    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int, arctracker_clone_list: list, min_orbit_radius=150):
         """
         Initializing method
 
@@ -26,6 +26,7 @@ class Level:
         :param coin_pos_list: list of all coin positions
         :param goal_pos_list: list of all goal point positions
         :param par: minimum possible movements to clear this level
+        :param arctracker_clone_list: info of ArcTrackerClones as a list of tuple(position, id, move_opposite(bool))
         :param min_orbit_radius: minimum radius of the generatable orbit
         """
 
@@ -37,6 +38,12 @@ class Level:
             new_arctracker = ArcTracker(a, id_num, min_orbit_radius)
             self.arctracker_group.add(new_arctracker)
             self.arctracker_list.append(new_arctracker)
+
+            # Add ArcTrackerClone if exists
+            for a_clone in arctracker_clone_list:
+                if a_clone[1] == id_num:
+                    new_arctracker_clone = ArcTrackerClone(a_clone[0], a_clone[1], min_orbit_radius, new_arctracker, a_clone[2])
+                    self.arctracker_group.add(new_arctracker_clone)
             id_num += 1
 
         # Generate and fill obstacle group
@@ -175,7 +182,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             par=1),
+             par=1,
+             arctracker_clone_list=[]),
 
     2: Level(arctracker_pos_list=[(screen_width - 150, 150)],
              obstacle_list=[
@@ -188,7 +196,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(150, 150)],
-             par=1),
+             par=1,
+             arctracker_clone_list=[]),
 
     3: Level(arctracker_pos_list=[(150, 150)],
              obstacle_list=[
@@ -201,7 +210,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height - 150)],
-             par=2),
+             par=2,
+             arctracker_clone_list=[]),
 
     4: Level(arctracker_pos_list=[(450, screen_height // 2 - 100)],
              obstacle_list=[
@@ -215,7 +225,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(450, screen_height // 2 + 100)],
-             par=1),
+             par=1,
+             arctracker_clone_list=[]),
 
     5: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
@@ -234,7 +245,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             par=4),
+             par=4,
+             arctracker_clone_list=[]),
 
     6: Level(arctracker_pos_list=[(350, screen_height // 2)],
              obstacle_list=[
@@ -245,7 +257,8 @@ level_dict = {
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 350, screen_height // 2)],
-             par=2),
+             par=2,
+             arctracker_clone_list=[]),
 
     7: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
@@ -257,7 +270,8 @@ level_dict = {
              coin_pos_list=[(1706, 454), (1586, 334), (1450, 237), (1293, 165), (1129, 121), (960, 107),
                             (791, 121), (627, 165), (473, 237), (334, 334), (214, 454)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             par=1),
+             par=1,
+             arctracker_clone_list=[]),
 
     8: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
@@ -268,7 +282,8 @@ level_dict = {
              ],
              coin_pos_list=[(960, 200), (960, 540), (960, 880)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
-             par=2),
+             par=2,
+             arctracker_clone_list=[]),
 
     9: Level(arctracker_pos_list=[(960, 500)],
              obstacle_list=[
@@ -279,17 +294,18 @@ level_dict = {
              ],
              coin_pos_list=[(900, 540)],
              goal_pos_list=[(960, 580)],
-             par=2),
+             par=2,
+             arctracker_clone_list=[]),
 
     10: Level(arctracker_pos_list=[(150, 540)],
               obstacle_list=[
                   StaticRectangularObstacle(0, 0, screen_width, 20),
                   StaticRectangularObstacle(0, 0, 20, screen_height),
                   StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
-                  AngleFollowerImageObstacle(test_img_1, (1500, 540))
+                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
               ],
               coin_pos_list=[],
               goal_pos_list=[(screen_width - 150, 540)],
-              par=2)
+              par=2,
+              arctracker_clone_list=[((960, 540), 1, False)])
 }
