@@ -297,15 +297,32 @@ level_dict = {
              par=2,
              arctracker_clone_list=[]),
 
-    10: Level(arctracker_pos_list=[(150, 540)],
+    10: Level(arctracker_pos_list=[(150, 300)],
               obstacle_list=[
                   StaticRectangularObstacle(0, 0, screen_width, 20),
                   StaticRectangularObstacle(0, 0, 20, screen_height),
                   StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
+                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
+                  StaticCircularObstacle(300, 100, 50),
+                  StaticCircularObstacle(140, 800, 300),
+                  StaticCircularObstacle(1200, 1000, 100),
+                  StaticCircularObstacle(980, 500, 75),
+                  StaticCircularObstacle(400, 400, 120),
+                  StaticCircularObstacle(700, 100, 140),
+                  StaticCircularObstacle(800, 350, 60),
+                  StaticCircularObstacle(1500, 700, 200),
+                  StaticCircularObstacle(1150, 650, 100),
+                  StaticCircularObstacle(700, 700, 150),
+                  StaticCircularObstacle(1000, 900, 50),
+                  StaticCircularObstacle(1820, 80, 120),
+                  StaticCircularObstacle(1600, 350, 80),
+                  StaticCircularObstacle(1300, 200, 130),
+                  StaticCircularObstacle(1300, 400, 30),
+                  StaticCircularObstacle(1100, 300, 50),
+                  StaticCircularObstacle(900, 100, 70),
               ],
               coin_pos_list=[],
-              goal_pos_list=[(screen_width - 150, 540)],
+              goal_pos_list=[(screen_width - 150, 800)],
               par=2,
-              arctracker_clone_list=[((960, 540), 1, False)])
+              arctracker_clone_list=[])
 }
