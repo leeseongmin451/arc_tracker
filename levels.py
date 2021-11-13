@@ -112,6 +112,13 @@ class Level:
         self.coin_group.update(mouse_state, key_state)
         self.goal_group.update(mouse_state, key_state)
 
+        # Check whether ArcTracker's position gets out of the screen
+        for a in self.arctracker_group:
+            if a.rect.centerx < -a.rect.w // 2 or a.rect.centerx > screen_width + a.rect.w // 2 or \
+               a.rect.centery < -a.rect.h // 2 or a.rect.centery > screen_height + a.rect.h // 2:
+                self.initialize()
+                break
+
         # Detect collision between arc tracker and obstacles
         for a in self.arctracker_group:
             for o in self.obstacle_group:
