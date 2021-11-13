@@ -182,10 +182,6 @@ class Level:
 level_dict = {
     1: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
              coin_pos_list=[],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
@@ -194,10 +190,6 @@ level_dict = {
 
     2: Level(arctracker_pos_list=[(screen_width - 150, 150)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                  StaticRectangularObstacle(760, 0, 400, 600),
                  StaticRectangularObstacle(760, screen_height - 200, 400, 200)
              ],
@@ -208,10 +200,6 @@ level_dict = {
 
     3: Level(arctracker_pos_list=[(150, 150)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                  StaticCircularObstacle(300, screen_height - 100, 700),
                  StaticCircularObstacle(screen_width - 300, 100, 700)
              ],
@@ -222,10 +210,6 @@ level_dict = {
 
     4: Level(arctracker_pos_list=[(450, screen_height // 2 - 100)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                  StaticRectangularObstacle(0, screen_height // 2 - 20, 550, 40),
                  StaticInnerCurvedObstacle(StaticCircularObstacle, (screen_width // 2, screen_height // 2, 450),
                                            (screen_width // 2, screen_height // 2), 400)
@@ -237,10 +221,6 @@ level_dict = {
 
     5: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                  StaticRectangularObstacle(270, 0, 300, screen_height // 2),
                  StaticRectangularObstacle(990, 0, 300, screen_height // 2),
                  StaticRectangularObstacle(630, screen_height // 2, 300, screen_height // 2),
@@ -269,10 +249,6 @@ level_dict = {
 
     7: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
              coin_pos_list=[(1706, 454), (1586, 334), (1450, 237), (1293, 165), (1129, 121), (960, 107),
                             (791, 121), (627, 165), (473, 237), (334, 334), (214, 454)],
@@ -282,10 +258,6 @@ level_dict = {
 
     8: Level(arctracker_pos_list=[(150, screen_height // 2)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
              coin_pos_list=[(960, 200), (960, 540), (960, 880)],
              goal_pos_list=[(screen_width - 150, screen_height // 2)],
@@ -294,10 +266,6 @@ level_dict = {
 
     9: Level(arctracker_pos_list=[(960, 500)],
              obstacle_list=[
-                 StaticRectangularObstacle(0, 0, screen_width, 20),
-                 StaticRectangularObstacle(0, 0, 20, screen_height),
-                 StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                 StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height)
              ],
              coin_pos_list=[(900, 540)],
              goal_pos_list=[(960, 580)],
@@ -306,10 +274,6 @@ level_dict = {
 
     10: Level(arctracker_pos_list=[(150, 300)],
               obstacle_list=[
-                  StaticRectangularObstacle(0, 0, screen_width, 20),
-                  StaticRectangularObstacle(0, 0, 20, screen_height),
-                  StaticRectangularObstacle(0, screen_height - 20, screen_width, 20),
-                  StaticRectangularObstacle(screen_width - 20, 0, 20, screen_height),
                   StaticCircularObstacle(300, 100, 50),
                   StaticCircularObstacle(140, 800, 300),
                   StaticCircularObstacle(1200, 1000, 100),
