@@ -959,9 +959,9 @@ class HowToPlayScreen(Screen):
                                           font="verdana",
                                           font_size=15,
                                           pos=(550, 860))
-        self.desc_textbox5 = TextGroupBox(text_list=["There are many kind of obstacles including border on each side of",
-                                                     "screen. If your AT touches any of them, you'll fail the level and",
-                                                     "AT will return to the intial position."],
+        self.desc_textbox5 = TextGroupBox(text_list=["There are many kind of obstacles. If your AT touches any of them,",
+                                                     "you'll fail the level and AT will return to the intial position.",
+                                                     "You'll also fail the level when AT gets out of the screen."],
                                           font="verdana",
                                           font_size=15,
                                           pos=(1200, 270))
