@@ -969,24 +969,22 @@ class StaticImageObstacle(Obstacle):
         self.group.add(self)
 
 
-class ObstaclePath:
-    """
-    A path needed for moving obstacles
-
-    It is represented by a combination of multiple ObstaclePathSegment
-    """
-
-    def __init__(self):
-        pass
-
-
 class ObstaclePathSegment:
     """
     A segment as a part of the ObstaclePath
     """
 
-    def __init__(self, x: Callable, y: Callable):
+    def __init__(self, x: Callable, y: Callable, length: Union[int, float]):
+        """
+        Initializing method
+
+        :param x: x position on this path as a function of time t
+        :param y: y position on this path as a function of time t
+        :param length: range of time t
+        """
+
         self.x, self.y = x, y
+        self.length = length
 
     def get_pos(self, t: Union[int, float]) -> (Union[int, float], Union[int, float]):
         """
@@ -997,6 +995,73 @@ class ObstaclePathSegment:
         """
 
         return self.x(t), self.y(t)
+
+
+class ObstaclePath:
+    """
+    A path needed for moving obstacles
+
+    It is represented by a combination of multiple ObstaclePathSegment
+    """
+
+    def __init__(self, segment_list: List[ObstaclePathSegment], speed: Union[int, float], start_time=0, smooth_motion=False, move_opposite=False, uni_direction=False):
+        """
+        Initializing method
+
+        :param segment_list: list of all ObstaclePathSegments needed
+        :param speed: moving speed of the obstacle on its path
+        :param start_time: determine starting time on this path. equivalent to position.
+        :param smooth_motion: move smoothly at the end of the path
+        :param move_opposite: start moving to opposite direction
+        :param uni_direction: if this is True, obstacle will move at only one direction on its path.
+                            when it gets to the end of the path, it just "teleports" to the starting position
+                            and move again.
+        """
+
+        self.segment_list = segment_list
+        self.total_length = sum([p.length for p in self.segment_list])
+
+        self.start_time = start_time
+        self.smooth_motion = smooth_motion
+        self.move_opposite = move_opposite
+        self.uni_direction = uni_direction
+
+        self.current_time = self.start_time
+        self.current_position = self.get_pos(self.current_time)
+
+        self.max_speed = speed
+        self.current_speed = -self.max_speed if self.move_opposite else self.max_speed
+
+    def get_pos(self, t: Union[int, float]) -> (Union[int, float], Union[int, float]):
+        """
+        Returns position on this path segment at time t
+
+        :param t: time
+        :return: position at time t
+        """
+
+        for segment in self.segment_list:
+            if t > segment.length:
+                t -= segment.length
+            else:
+                return segment.get_pos(t)
+
+    def update_time(self):
+        self.current_time += self.current_speed
+
+        if self.current_speed <= 0 and self.current_time <= 0:
+            if self.uni_direction:
+                self.current_time = self.total_length
+            else:
+                self.current_speed = -self.current_speed
+
+        elif self.current_speed >= 0 and self.current_time >= self.total_length:
+            if self.uni_direction:
+                self.current_time = 0
+            else:
+                self.current_speed = -self.current_speed
+
+        self.current_position = self.get_pos(self.current_time)
 
 
 class LinearMovingRectangularObstacle(Obstacle):
