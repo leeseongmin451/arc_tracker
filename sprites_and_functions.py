@@ -7,6 +7,7 @@ import init
 from init import *
 import math
 from typing import Union
+from typing import Callable
 import copy
 
 
@@ -983,8 +984,18 @@ class ObstaclePathSegment:
     A segment as a part of the ObstaclePath
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, x: Callable, y: Callable):
+        self.x, self.y = x, y
+
+    def get_pos(self, t: Union[int, float]) -> (Union[int, float], Union[int, float]):
+        """
+        Returns position on this path segment at time t
+
+        :param t: time
+        :return: position at time t
+        """
+
+        return self.x(t), self.y(t)
 
 
 class LinearMovingRectangularObstacle(Obstacle):
