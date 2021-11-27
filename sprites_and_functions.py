@@ -950,7 +950,7 @@ class StaticImageObstacle(Obstacle):
 
     group = pygame.sprite.Group()   # StaticInnerCurvedObstacle's own sprite group
 
-    def __init__(self, image: pygame.Surface, rect: List[int, int, int, int]):
+    def __init__(self, image: pygame.Surface, rect: List[int]):
         """
         Initializing method
 

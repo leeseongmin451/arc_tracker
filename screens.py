@@ -80,7 +80,7 @@ class Button(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()       # Button's own sprite group
 
-    def __init__(self, rect: List[int, int, int, int], text: str, text_font: str, text_font_size: int, color: Tuple[int, int, int], default_back_color=(0, 0, 0)):
+    def __init__(self, rect: List[int], text: str, text_font: str, text_font_size: int, color: Tuple[int, int, int], default_back_color=(0, 0, 0)):
         """
         Initialize and apply basic settings to button
         :param rect: position and rectangular size of button
@@ -358,7 +358,7 @@ class LevelButton(Button):
     Each LevelButton instance has its own level attribute to connect to.
     """
 
-    def __init__(self, level: int, rect: List[int, int, int, int], on_screen):
+    def __init__(self, level: int, rect: List[int], on_screen):
         """
         Initializing method
 
