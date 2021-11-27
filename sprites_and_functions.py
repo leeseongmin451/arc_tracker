@@ -6,12 +6,13 @@ import pygame.sprite
 import init
 from init import *
 import math
-from typing import Union
+from typing import Union, Dict, Sequence, Tuple, List
 from typing import Callable
 import copy
 
 
-def distance(pos1, pos2):
+def distance(pos1: (Union[int, float], Union[int, float]),
+             pos2: (Union[int, float], Union[int, float])) -> Union[int, float]:
     """
     Returns distance of two positions with x, y coordinates
     :param pos1: position 1
@@ -43,7 +44,7 @@ class ArcTracker(pygame.sprite.Sprite):
     """
     group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
-    def __init__(self, pos, id_num, min_orbit_radius):
+    def __init__(self, pos: (int, int), id_num: int, min_orbit_radius: int):
         """
         Initializing method
         :param pos: starting position
@@ -95,7 +96,7 @@ class ArcTracker(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initializing method during gameplay
 
@@ -120,7 +121,7 @@ class ArcTracker(pygame.sprite.Sprite):
         self.raise_popup = False
         self.level_complete = False
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -251,7 +252,7 @@ class ArcTrackerClone(pygame.sprite.Sprite):
     """
     group = pygame.sprite.Group()       # ArcTrackers' own sprite group
 
-    def __init__(self, pos, id_num, min_orbit_radius, host: ArcTracker, move_opposite_direction=False):
+    def __init__(self, pos: (int, int), id_num: int, min_orbit_radius: int, host: ArcTracker, move_opposite_direction=False):
         """
         Initializing method
         :param pos: starting position
@@ -322,7 +323,7 @@ class ArcTrackerClone(pygame.sprite.Sprite):
         self.new_axis = (0, 0)
 
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initializing method during gameplay
 
@@ -347,7 +348,7 @@ class ArcTrackerClone(pygame.sprite.Sprite):
         self.raise_popup = False
         self.level_complete = False
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -492,7 +493,7 @@ class ArcTrackerPath(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()  # ArcTrackerPath' own sprite group
 
-    def __init__(self, cursor_pos, arc_tracker_pos):
+    def __init__(self, cursor_pos: (int, int), arc_tracker_pos: (int, int)):
         """
         Initializing method
 
@@ -515,7 +516,7 @@ class ArcTrackerPath(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -546,7 +547,7 @@ class MinimumRadiusBorderLine(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()  # MinimumRadiusBorderLine' own sprite group
 
-    def __init__(self, center, radius):
+    def __init__(self, center: (int, int), radius: int):
         """
         Initializing method
 
@@ -565,7 +566,7 @@ class MinimumRadiusBorderLine(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -607,7 +608,7 @@ class RotationAxisMarker(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -636,7 +637,7 @@ class Coin(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()
 
-    def __init__(self, pos):
+    def __init__(self, pos: (int, int)):
         """
         Initializing method
 
@@ -651,14 +652,14 @@ class Coin(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, YELLOW1, (5, 5), 5)
         self.rect = self.image.get_rect(center=pos)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize this coin
 
         :return: None
         """
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -673,7 +674,7 @@ class GoalPoint(pygame.sprite.Sprite):
     A point where ArcTracker should reach in a single level.
     """
 
-    def __init__(self, pos):
+    def __init__(self, pos: (int, int)):
         """
         Initializing method
 
@@ -693,7 +694,7 @@ class GoalPoint(pygame.sprite.Sprite):
         self.sec_per_frame = 1 / FPS        # Seconds per frame
         self.animated_time = 0              # Elapsed time from init
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize this goal point
 
@@ -702,7 +703,7 @@ class GoalPoint(pygame.sprite.Sprite):
 
         self.arctracker_matched = False
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -738,7 +739,7 @@ class Obstacle(pygame.sprite.Sprite):
         :return: None
         """
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -765,7 +766,7 @@ class StaticRectangularObstacle(Obstacle):
 
     group = pygame.sprite.Group()  # StaticRectangularObstacle' own sprite group
 
-    def __init__(self, x, y, w, h):
+    def __init__(self, x: int, y: int, w: int, h: int):
         """
         Initializing method
 
@@ -793,7 +794,7 @@ class StaticCircularObstacle(Obstacle):
 
     group = pygame.sprite.Group()  # StaticCircularObstacle' own sprite group
 
-    def __init__(self, x, y, r):
+    def __init__(self, x: int, y: int, r: int):
         """
         Initializing method
 
@@ -835,7 +836,7 @@ class StaticPolygonObstacle(Obstacle):
 
     group = pygame.sprite.Group()  # StaticPolygonObstacle's own sprite group
 
-    def __init__(self, *vertices):
+    def __init__(self, *vertices: Tuple[int, int]):
         """
         Initializing method
 
@@ -878,7 +879,7 @@ class StaticRightTriangularObstacle(Obstacle):
 
     group = pygame.sprite.Group()  # StaticRightTriangularObstacle's own sprite group
 
-    def __init__(self, x, y, w, h, del_angle_pos="topleft"):
+    def __init__(self, x: int, y: int, w: int, h: int, del_angle_pos="topleft"):
         """
         Initializing method
 
@@ -949,7 +950,7 @@ class StaticImageObstacle(Obstacle):
 
     group = pygame.sprite.Group()   # StaticInnerCurvedObstacle's own sprite group
 
-    def __init__(self, image: pygame.Surface, rect: list):
+    def __init__(self, image: pygame.Surface, rect: List[int, int, int, int]):
         """
         Initializing method
 
@@ -1121,7 +1122,7 @@ class RotatingRectangularObstacle(Obstacle):
 
     group = pygame.sprite.Group()   # RotatingRectangularObstacle' own sprite group
 
-    def __init__(self, size, rotation_axis, angular_speed, initial_angle=0, center_offset=(0, 0)):
+    def __init__(self, size: (int, int), rotation_axis: (int, int), angular_speed: Union[int, float], initial_angle=0, center_offset=(0, 0)):
         """
         Initializing method
 
@@ -1155,7 +1156,7 @@ class RotatingRectangularObstacle(Obstacle):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initializing method during gameplay
 
@@ -1164,7 +1165,7 @@ class RotatingRectangularObstacle(Obstacle):
 
         self.current_angle = self.initial_angle     # Reset angle to initial value
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -1212,7 +1213,7 @@ class RotatingImageObstacle(Obstacle):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initializing method during gameplay
 
@@ -1221,7 +1222,7 @@ class RotatingImageObstacle(Obstacle):
 
         self.current_angle = 0      # Reset angle to 0
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -1283,7 +1284,7 @@ class AngleFollowerImageObstacle(Obstacle):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def assign_arctracker(self, arctracker: ArcTracker):
+    def assign_arctracker(self, arctracker: ArcTracker) -> None:
         """
 
         :param arctracker:
@@ -1293,7 +1294,7 @@ class AngleFollowerImageObstacle(Obstacle):
         self.following_at = arctracker
         self.current_at_angle = self.last_at_angle = self.following_at.relative_angle
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initializing method during gameplay
 
@@ -1302,7 +1303,7 @@ class AngleFollowerImageObstacle(Obstacle):
 
         self.current_angle = 0      # Reset angle to 0
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 

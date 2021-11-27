@@ -17,7 +17,14 @@ class Level:
     such as level number, minimum moves to clear, playtime, etc..
     """
 
-    def __init__(self, arctracker_pos_list: list, obstacle_list: list, coin_pos_list: list, goal_pos_list: list, par: int, arctracker_clone_list: list, min_orbit_radius=150):
+    def __init__(self,
+                 arctracker_pos_list: List[Tuple[int, int]],
+                 obstacle_list: List[Obstacle],
+                 coin_pos_list: List[Tuple[int, int]],
+                 goal_pos_list: List[Tuple[int, int]],
+                 par: int,
+                 arctracker_clone_list: List[Tuple[Tuple[int, int], int, bool]],
+                 min_orbit_radius=150):
         """
         Initializing method
 
@@ -70,7 +77,7 @@ class Level:
 
         self.cleared = False                    # Cleared status
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize all arc trackers and all obstacles in this level
 
@@ -97,7 +104,7 @@ class Level:
         # Initialize cleard status
         self.cleared = False
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Update all sprites(ArcTracker, obstacles, etc.) in this level
 
@@ -146,7 +153,7 @@ class Level:
         if all([a.level_complete for a in self.arctracker_group]):
             self.cleared = True
 
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw all sprites and texts in this level
 

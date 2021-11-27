@@ -12,7 +12,7 @@ class ImageView(pygame.sprite.Sprite):
     A rectanguler object to display an image
     """
 
-    def __init__(self, image, size, pos, fixpoint="topleft"):
+    def __init__(self, image: pygame.Surface, size: (int, int), pos: (int, int), fixpoint="topleft"):
         """
 
         :param image: image surface object to display
@@ -29,7 +29,7 @@ class ImageView(pygame.sprite.Sprite):
         self.fixpoint = fixpoint
         self.fix_position()
 
-    def fix_position(self):
+    def fix_position(self) -> None:
         """
         Determine exact position of text using fixpoint
         :return: None
@@ -54,7 +54,7 @@ class ImageView(pygame.sprite.Sprite):
         elif self.fixpoint == "bottomright":
             self.rect.bottomright = self.pos
 
-    def update(self, mouse_state, key_state):
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method
 
@@ -63,7 +63,7 @@ class ImageView(pygame.sprite.Sprite):
         :return: None
         """
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw this image on given surface
         :param surface: surface to draw on
@@ -80,7 +80,7 @@ class Button(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()       # Button's own sprite group
 
-    def __init__(self, rect, text, text_font, text_font_size, color, default_back_color=(0, 0, 0)):
+    def __init__(self, rect: List[int, int, int, int], text: str, text_font: str, text_font_size: int, color: Tuple[int, int, int], default_back_color=(0, 0, 0)):
         """
         Initialize and apply basic settings to button
         :param rect: position and rectangular size of button
@@ -131,7 +131,7 @@ class Button(pygame.sprite.Sprite):
         # Add self to button group
         self.group.add(self)
 
-    def activate(self):
+    def activate(self) -> None:
         """
         Make button active(clickable)
         :return: None
@@ -143,7 +143,7 @@ class Button(pygame.sprite.Sprite):
         self.text_surface_rect = self.text_surface.get_rect(center=self.rect.center)
         self.active = True      # Update method will be executed
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         """
         Make button inactive(not clickable)
         :return:
@@ -156,7 +156,7 @@ class Button(pygame.sprite.Sprite):
         self.active = False     # Update method will be passed
         self.current_back_color = self.default_back_color
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -186,7 +186,7 @@ class Button(pygame.sprite.Sprite):
             self.is_clicked = False
             self.current_back_color = self.hovered_back_color       # Change background status
 
-    def operate(self):
+    def operate(self) -> None:
         """
         Button's specific function will be defined here.
         Child button classes will have specific functions by overriding this method
@@ -195,7 +195,7 @@ class Button(pygame.sprite.Sprite):
 
         pass
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw button on screen
         :param surface: surface on which draw button
@@ -225,7 +225,7 @@ class LevelSelectButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         LevelSelectButton's own operation
 
@@ -254,7 +254,7 @@ class HowToPlayButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         HowToPlayButton's own operation
 
@@ -283,7 +283,7 @@ class SettingsButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         SettingsButton's own operation
 
@@ -312,7 +312,7 @@ class QuitButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         QuitButton's own operation
 
@@ -340,7 +340,7 @@ class MainMenuButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         MainMenuButton's own operation
 
@@ -358,7 +358,7 @@ class LevelButton(Button):
     Each LevelButton instance has its own level attribute to connect to.
     """
 
-    def __init__(self, level, rect, on_screen):
+    def __init__(self, level: int, rect: List[int, int, int, int], on_screen):
         """
         Initializing method
 
@@ -375,7 +375,7 @@ class LevelButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         LevelButton's own operation
 
@@ -406,7 +406,7 @@ class NextLevelButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         NextLevelButton's own operation
 
@@ -434,7 +434,7 @@ class RetryButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         RetryButton's own operation
 
@@ -462,7 +462,7 @@ class BackToLevelSelectButton(Button):
         self.on_screen = on_screen
         self.on_screen.manage_list.append(self)     # Add this button to this screen
 
-    def operate(self):
+    def operate(self) -> None:
         """
         BackToLevelSelectButton's own operation
 
@@ -478,7 +478,7 @@ class Text:
     A text surface class to display all texts appearing in this game
     """
 
-    def __init__(self, text, font, font_size, pos, fixpoint="topleft", color=WHITE1):
+    def __init__(self, text: str, font: str, font_size: int, pos: (int, int), fixpoint="topleft", color=WHITE1):
         self.text = text                                                    # Content to display
         self.font_size = font_size                                          # Size of this text
         self.font = pygame.font.SysFont(font, self.font_size)               # Create font
@@ -491,7 +491,7 @@ class Text:
         self.fixpoint = fixpoint    # Position to fix the text
         self.fix_position()
 
-    def fix_position(self):
+    def fix_position(self) -> None:
         """
         Determine exact position of text using fixpoint
         :return: None
@@ -516,7 +516,7 @@ class Text:
         elif self.fixpoint == "bottomright":
             self.rect.bottomright = self.pos
 
-    def update(self, mouse_state, key_state):
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method
 
@@ -527,7 +527,7 @@ class Text:
 
         pass
 
-    def update_text(self, new_text):
+    def update_text(self, new_text: str) -> None:
         """
         Change text
         :param new_text: new text to replace
@@ -542,7 +542,7 @@ class Text:
         # Fix position again
         self.fix_position()
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw text on a given surface
         :param surface: surface to draw on
@@ -557,7 +557,7 @@ class TextGroupBox(pygame.sprite.Sprite):
     An invisible box which contains multiple line of texts
     """
 
-    def __init__(self, text_list, font, font_size, pos, color=WHITE1, margin=10, line_space=10):
+    def __init__(self, text_list: List[str], font: str, font_size: int, pos: (int, int), color=WHITE1, margin=10, line_space=10):
         """
         Initializing method
 
@@ -605,7 +605,7 @@ class TextGroupBox(pygame.sprite.Sprite):
             self.image.blit(surf, rect)
             current_text_pos_y += self.font_size + line_space
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method needed for all sprite class
 
@@ -614,7 +614,7 @@ class TextGroupBox(pygame.sprite.Sprite):
         :return: None
         """
 
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw this box in given surface
 
@@ -632,7 +632,7 @@ class PopupTextBox(pygame.sprite.Sprite):
 
     group = pygame.sprite.Group()  # PopupTextBox' own sprite group
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         """
         Initializing method
 
@@ -678,7 +678,7 @@ class PopupTextBox(pygame.sprite.Sprite):
         # Add this sprite to sprite groups
         self.group.add(self)
 
-    def update(self, mouse_state, key_state):
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Updating method
 
@@ -712,7 +712,7 @@ class PopupTextBox(pygame.sprite.Sprite):
             if self.current_frame_cnt >= self.display_frame_cnt:
                 self.moving_down = True
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw box and text
 
@@ -745,7 +745,7 @@ class LevelClearedWindow:
         self.retry_button = RetryButton(on_screen)
         self.level_select_button = BackToLevelSelectButton(on_screen)
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Update all texts/buttons on this window
 
@@ -794,7 +794,7 @@ class Screen:
         self.manage_list = []
         self.now_display = False        # Whether show this screen now or not
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Update all texts/buttons on this screen
 
@@ -806,7 +806,7 @@ class Screen:
         for t in self.manage_list:
             t.update(mouse_state, key_state)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw all texts/buttons on this screen
 
@@ -819,7 +819,7 @@ class Screen:
         for t in self.manage_list:
             t.draw(surface)
 
-    def show(self):
+    def show(self) -> None:
         """
         Display this screen
 
@@ -828,7 +828,7 @@ class Screen:
 
         self.now_display = True
 
-    def hide(self):
+    def hide(self) -> None:
         """
         Hide this screen to show other screen
 
@@ -997,7 +997,7 @@ class HowToPlayScreen(Screen):
 
         self.mainmenu_button = MainMenuButton(self)         # Button for going back to the main menu screen
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Overrides draw method from Screen class to draw an additional line
 
@@ -1057,7 +1057,7 @@ class GamePlayScreen(Screen):
 
         self.cleared_window = LevelClearedWindow(self)
 
-    def intialize_level(self, levelnum):
+    def intialize_level(self, levelnum: int) -> None:
         """
         Change and Initialize level to input levelnum parameter.
 
@@ -1074,7 +1074,7 @@ class GamePlayScreen(Screen):
         self.manage_list.append(self.current_levelnum_text)
         self.manage_list.append(self.current_level)
 
-    def update(self, mouse_state, key_state) -> None:
+    def update(self, mouse_state: Dict[int, Union[bool, Tuple[int, int]]], key_state: Sequence[bool]) -> None:
         """
         Overrides update method of Screen class
 
@@ -1110,7 +1110,7 @@ class GamePlayScreen(Screen):
         if self.current_level.cleared:
             self.cleared_window.update(mouse_state, key_state)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw all texts/buttons on this screen
 
