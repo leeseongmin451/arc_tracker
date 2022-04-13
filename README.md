@@ -1,11 +1,49 @@
-# ARC TRACKER
+ARC TRACKER
+==============
+파이썬 모듈 PyGame을 이용하여 만든 퍼즐게임입니다.  
+원주곡선을 따라 공을 움직여 목표 지점에 도달시키면 됩니다.  
+아직 개발 중인 게임이며, 레벨 개수에 제한을 두지 않을 계획입니다. 현재는 11레벨까지 만들어져 있습니다.  
+11레벨을 클리어하고 다음 레벨로 넘어가려 하면 오류를 내면서 게임이 강제 종료될 것입니다. 이 부분은 추후 보완 예정입니다.  
 
-### A simple puzzle game made with PyGame
-### Control your "Arc Tracker" which always moves along arc line
+# 실행 방법
+아직 별도의 실행 파일이 없어 python version 3.8 이상이 필요합니다.  
+모든 파일을 다운받아 압축을 해제하고 생성된 폴더 안에 pygame 모듈을 설치해야 합니다.  
+그 상태에서 프로젝트 파일을 IDE로 열어 main.py 파일을 실행합니다.
 
+# 조작법
+1. 마우스 버튼을 누르고 드래그하면 마우스 커서에 중심을 두고 원주가 공을 지나는 크기의 원이 그려집니다. 공이 움직일 궤적입니다.
+2. 마우스 버튼을 놓으면 궤적의 위치와 크기가 설정됩니다. 궤적을 취소하고 다시 설정하려면 ESC 또는 C 키를 누르면 됩니다.
+3. 이 상태에서 마우스 왼쪽 버튼을 클릭하면 공이 궤적을 따라 반시계 방향으로 움직이기 시작합니다. 오른쪽 버튼을 클릭하면 시계 방향으로 움직입니다.
+4. 마우스 버튼을 다시 한 번 클릭하면 공이 움직임을 멈춥니다.
+5. 1~4의 과정을 반복하여 공을 움직입니다. 노랗게 표시된 목표 지점에 도달시키면 해당 레벨을 클리어하고 다음 레벨로 넘어갑니다.
+6. 플레이 도중 Q 버튼을 누르면 레벨 선택 창으로 나올 수 있습니다.
 
-## HOW TO START
+# 게임 구성 및 플레이 과정
+## 메인 메뉴
+게임 실행 시 처음 나오는 화면입니다. 제목과 시작 버튼, How to Play 버튼, 설정 버튼으로 이루어져 있습니다.  
 
-Just download and unzip all files in one folder.
-You may need python 3.8 interpreter.
-Run "main.py" file to start the game.
+![mainmenu_scene](https://user-images.githubusercontent.com/80591422/163208537-a145b414-fb5c-4aeb-8d7a-a4312c3b8ffc.png)
+
+## 레벨 선택
+메인 메뉴 화면에서 시작 버튼을 누르면 나오는 화면입니다.  
+레벨을 자유롭게 선택하여 플레이할 수 있습니다.  
+현재는 Level 11 까지만 만들어져 있으며, 다른 레벨 버튼은 동작하지 않습니다.  
+
+![level_select_scene](https://user-images.githubusercontent.com/80591422/163209805-97f0cb6a-0995-4086-973f-932406e07ecc.png)
+
+## How to Play
+메인 메뉴 화면에서 How to Play 버튼을 누르면 나오는 화면입니다.  
+게임 플레이 방법에 대한 자세한 설명이 적혀 있습니다.  
+
+![how_to_play_scene](https://user-images.githubusercontent.com/80591422/163210327-619a8fa4-e395-4f28-b7c7-81c9623621b7.png)
+
+## 설정 창
+메인 메뉴 화면에서 설정 버튼을 누르면 나오는 화면입니다.  
+아직 별다른 설정 항목이 없어 현재는 빈 화면입니다.  
+
+## 플레이 스크린샷
+
+![gameplay_scene](https://user-images.githubusercontent.com/80591422/163211765-ba006aaf-1a12-40bc-ab2d-42a6279af631.png)
+
+![gameplay_scene2](https://user-images.githubusercontent.com/80591422/163211983-35751303-d808-4f43-927a-5fc4ce4a51ac.png)
+
